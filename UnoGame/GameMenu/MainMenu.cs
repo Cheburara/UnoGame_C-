@@ -1,26 +1,38 @@
-namespace UnoGame.GameMenu;
+using System;
 
-public class MainMenu
+namespace UnoGame.GameMenu
 {
-    public void Display()
+    public class MainMenu
     {
-        Console.WriteLine("Welcome to the UNO Game!");
-        Console.WriteLine("1. Start New Game");
-        Console.WriteLine("2. Load Game");
-        Console.WriteLine("3. Exit");
-    }
-
-    public int GetUserChoice(int min, int max)
-    {
-        int choice;
-        while (true)
+        public void Display()
         {
-            if (int.TryParse(Console.ReadLine(), out choice) && choice >= min && choice <= max)
-            {
-                return choice;
-            }
+            Console.Clear();
+            PrintSeparator(); 
+            Console.WriteLine("Welcome to the UNO Game!");
+            PrintSeparator(); 
+            Console.WriteLine("1. Start New Game");
+            Console.WriteLine("2. Load Game");
+            Console.WriteLine("3. Exit");
+            PrintSeparator(); 
+        }
 
-            Console.WriteLine("Invalid input. Please enter a valid choice.");
+        public int GetUserChoice(int min, int max)
+        {
+            int choice;
+            while (true)
+            {
+                if (int.TryParse(Console.ReadLine(), out choice) && choice >= min && choice <= max)
+                {
+                    return choice;
+                }
+
+                Console.WriteLine("Invalid input. Please enter a valid choice.");
+            }
+        }
+
+        private void PrintSeparator()
+        {
+            Console.WriteLine("-----------------------------------------------------------");
         }
     }
 }

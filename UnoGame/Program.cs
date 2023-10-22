@@ -5,6 +5,7 @@ namespace UnoGame
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
             MainMenu mainMenu = new MainMenu();
@@ -27,7 +28,8 @@ namespace UnoGame
                         loadGameMenu.Display();
                         break;
                     case 3:
-                        Environment.Exit(0);
+                        ExitGame exitGame = new ExitGame();
+                        exitGame.Display();
                         break;
                 }
             }
