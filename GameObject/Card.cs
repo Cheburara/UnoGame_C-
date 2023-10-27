@@ -71,5 +71,14 @@ namespace UnoGame.GameObject
                 return Color + " " + Value;
             }
         }
+
+        public override string ToString()
+        {
+            if (Value == Enums.CardValue.Wild)
+            {
+                return Value.ToString();
+            }
+            return Color + " " + Value;
+        }
     }
 }

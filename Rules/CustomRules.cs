@@ -1,9 +1,11 @@
 namespace UnoGame.Rules;
 using UnoGame.GameObject;
 
-public class CustomRules
+public class CustomRules : RulesBase
 {
     public TurnDirection.Enums.TurnDirection TurnOrder { get; set; }
+    
+    public int InitialCardCount { get; set; }
 
     public void Display()
     {
@@ -20,6 +22,9 @@ public class CustomRules
         {
             TurnOrder = TurnDirection.Enums.TurnDirection.Counterclockwise;
         }
+        
+        Console.WriteLine("Enter the number of initial cards to deal:");
+        InitialCardCount = GetUserChoice(1, int.MaxValue);
     }
 
     private int GetUserChoice(int min, int max)
