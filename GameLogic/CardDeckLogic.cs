@@ -15,10 +15,15 @@ namespace UnoGame.GameLogic
         {
             deck = cardDeck;
         }
-        
+
         public List<Card> Deck
         {
             get { return deck.GetDeck(); }
+        }
+        
+        public void SetCurrentColor(Enums.CardColor color)
+        {
+            currentColor = color;
         }
 
         public Enums.CardColor GetCurrentColor()
@@ -73,13 +78,12 @@ namespace UnoGame.GameLogic
                 deck.GetDeck()[k] = deck.GetDeck()[n];
                 deck.GetDeck()[n] = card;
             }
-            
+
             Console.WriteLine("Deck has been shuffled.");
         }
 
         public Card ChooseFirstCard()
         {
-            ShuffleDeck(); // Ensure the deck is shuffled
             List<Card> deckCards = deck.GetDeck();
             if (deckCards.Count > 0)
             {
@@ -89,7 +93,7 @@ namespace UnoGame.GameLogic
                 Console.WriteLine("The first card has been chosen and is " + topDiscard.ToString());
                 return topDiscard;
             }
-            
+
             Console.WriteLine("No more cards in the deck.");
             return null;
         }

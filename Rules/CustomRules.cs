@@ -4,8 +4,9 @@ using UnoGame.GameObject;
 public class CustomRules : RulesBase
 {
     public TurnDirection.Enums.TurnDirection TurnOrder { get; set; }
-    
     public int InitialCardCount { get; set; }
+    
+    public int TotalCardsInDeck { get; set; }
 
     public void Display()
     {
@@ -22,6 +23,9 @@ public class CustomRules : RulesBase
         {
             TurnOrder = TurnDirection.Enums.TurnDirection.Counterclockwise;
         }
+        
+        Console.WriteLine("Enter the total number of cards in the deck (between 112 and 1080):");
+        TotalCardsInDeck = GetUserChoice(112, 324);
         
         Console.WriteLine("Enter the number of initial cards to deal:");
         InitialCardCount = GetUserChoice(1, int.MaxValue);

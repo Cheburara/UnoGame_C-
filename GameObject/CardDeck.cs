@@ -5,6 +5,7 @@ namespace UnoGame.GameObject
 {
     public class CardDeck
     {
+        private const int TotalCardsInDeck = 112;
         private List<Card> deck;
 
         public CardDeck()
@@ -55,10 +56,33 @@ namespace UnoGame.GameObject
                 {
                     // Special black cards
                     deck.Add(new Card { Color = color, Value = Enums.CardValue.Wild, Score = Enums.CardScore.Wild });
+                    deck.Add(new Card { Color = color, Value = Enums.CardValue.Wild, Score = Enums.CardScore.Wild });
+                    deck.Add(new Card { Color = color, Value = Enums.CardValue.Wild, Score = Enums.CardScore.Wild });
+                    deck.Add(new Card { Color = color, Value = Enums.CardValue.Wild, Score = Enums.CardScore.Wild });
+                    deck.Add(new Card { Color = color, Value = Enums.CardValue.WildDrawFour, Score = Enums.CardScore.WildDrawFour });
+                    deck.Add(new Card { Color = color, Value = Enums.CardValue.WildDrawFour, Score = Enums.CardScore.WildDrawFour });
+                    deck.Add(new Card { Color = color, Value = Enums.CardValue.WildDrawFour, Score = Enums.CardScore.WildDrawFour });
                     deck.Add(new Card { Color = color, Value = Enums.CardValue.WildDrawFour, Score = Enums.CardScore.WildDrawFour });
                     deck.Add(new Card { Color = color, Value = Enums.CardValue.WildShuffleHands, Score = Enums.CardScore.WildShuffleHands });
                     deck.Add(new Card { Color = color, Value = Enums.CardValue.WildCustomizable, Score = Enums.CardScore.WildCustomizable });
+                    deck.Add(new Card { Color = color, Value = Enums.CardValue.WildCustomizable, Score = Enums.CardScore.WildCustomizable });
+                    deck.Add(new Card { Color = color, Value = Enums.CardValue.WildCustomizable, Score = Enums.CardScore.WildCustomizable });
+                    
                 }
+            }
+        }
+
+        public void ShuffleDeck()
+        {
+            Random random = new Random();
+            int n = deck.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = random.Next(n + 1);
+                Card card = deck[k];
+                deck[k] = deck[n];
+                deck[n] = card;
             }
         }
     }

@@ -1,67 +1,121 @@
 using UnoGame.GameObject;
 
-
 namespace UnoGame.GameLogic
 {
     public class PlayerAction
     {
-        private CardDeckLogic cardDeckLogic;
-        private PlayerHand playerHand;
+        private CardDeckLogic _cardDeckLogic;
+        private PlayerHand _playerHand;
 
         public PlayerAction(CardDeckLogic cardDeckLogic, PlayerHand playerHand)
         {
-            this.cardDeckLogic = cardDeckLogic;
-            this.playerHand = playerHand;
+            this._cardDeckLogic = cardDeckLogic;
+            this._playerHand = playerHand;
         }
 
-        public PlayerAction(CardDeckLogic cardDeckLogic)
+        public bool CanPlayCard(Player player, Card card, Enums.CardColor currentColor)
         {
-            this.cardDeckLogic = cardDeckLogic;
-        }
-
-        public bool PlayCard(Player player, Card card)
-        {
-            if (IsValidCardToPlay(player, card))
-            {
-                // Remove the played card from the player's hand
-                playerHand.RemoveCardFromHand(card);
-
-                // Update the current color and value based on the card played
-                cardDeckLogic.UpdateCurrentColorAndValue(card);
-
-                return true;
-            }
-
-            return false; // The card cannot be played
+            // Check if the card is valid to play
+            return IsValidCardToPlay(player, card, currentColor);
         }
 
         public Card DrawCard(Player player)
         {
-            Card drawnCard = cardDeckLogic.DrawCard();
-            playerHand.AddCardToHand(drawnCard); // Add the drawn card to the player's hand
+            Card drawnCard = _cardDeckLogic.DrawCard();
+            _playerHand.AddCardToHand(drawnCard);
             return drawnCard;
+
+            // Handle the case when the deck is empty (you may need to implement this in CardDeckLogic)
         }
 
-        private bool IsValidCardToPlay(Player player, Card card)
+        public bool PlayCard(Player player, Card card, Enums.CardColor chosenColor)
         {
-            Card topDiscard = cardDeckLogic.GetTopDiscardCard();
+            if (CanPlayCard(player, card, chosenColor))
+            {
+                if (card.Value == Enums.CardValue.Wild || card.Value == Enums.CardValue.WildDrawFour)
+                {
+                    // It's a Wild card, so prompt the player to choose a color
+                    Console.Write("Select a color (Red, Blue, Green, Yellow): ");
+                    string colorChoice = Console.ReadLine();
 
-            // Check if the card matches the current color, value, or is a Wild card
-            if (card.Color == cardDeckLogic.GetCurrentColor() ||
-                card.Value == cardDeckLogic.GetCurrentValue() ||
-                card.Value == Enums.CardValue.Wild ||
-                card.Value == Enums.CardValue.WildDrawFour)
+                    if (Enum.TryParse(colorChoice, out Enums.CardColor selectedColor))
+                    {
+                        // Update the current color based on the chosen color
+                        _cardDeckLogic.SetCurrentColor(selectedColor);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid color choice. Using default color.");
+                    }
+                }
+
+                _playerHand.RemoveCardFromHand(card);
+
+                // You might want to handle special card effects here (e.g., Skip, Reverse)
+                // You can implement additional logic to handle these special cases
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool IsValidCardToPlay(Player player, Card card, Enums.CardColor currentColor)
+        {
+            Card topDiscard = _cardDeckLogic.GetTopDiscardCard();
+            Enums.CardValue currentValue = _cardDeckLogic.GetCurrentValue();
+
+            // Convert card.Color and topDiscard.Color to strings for comparison
+            string cardColor = card.Color.ToString();
+            string topDiscardColor = topDiscard.Color.ToString();
+
+            // Convert card.Value and topDiscard.Value to strings for comparison
+            string cardValue = card.Value.ToString();
+            string topDiscardValue = topDiscard.Value.ToString();
+
+            if (cardColor == currentColor.ToString() ||
+                cardValue == currentValue.ToString() ||
+                cardValue == Enums.CardValue.Wild.ToString() ||
+                cardValue == Enums.CardValue.WildDrawFour.ToString())
             {
                 return true;
             }
 
-            // Check if the card matches the current color on top of the discard pile
-            if (card.Color == topDiscard.Color)
+            if (cardColor == topDiscardColor)
             {
-                return true; 
+                return true;
             }
 
-            return false; 
+            if (cardValue == topDiscardValue)
+            {
+                return true;
+            }
+
+            // Check for wild cards with the chosen color
+            if ((cardValue == Enums.CardValue.Wild.ToString() || cardValue == Enums.CardValue.WildDrawFour.ToString()) && cardColor == currentColor.ToString())
+            {
+                return true;
+            }
+
+            return false;
+        }
+        public void ChooseWildCardColor(Card wildCard)
+        {
+            if (wildCard.Value == Enums.CardValue.Wild || wildCard.Value == Enums.CardValue.WildDrawFour)
+            {
+                // It's a Wild card, so prompt the player to choose a color
+                Console.Write("Select a color (Red, Blue, Green, Yellow): ");
+                string colorChoice = Console.ReadLine();
+
+                if (Enum.TryParse(colorChoice, out Enums.CardColor selectedColor))
+                {
+                    // Update the current color based on the chosen color
+                    _cardDeckLogic.SetCurrentColor(selectedColor);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid color choice. Using default color.");
+                }
+            }
         }
     }
 }
