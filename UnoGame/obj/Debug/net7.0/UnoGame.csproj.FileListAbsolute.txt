@@ -12,3 +12,6 @@ C:\Users\arina\RiderProjects\uno\UnoGame\obj\Debug\net7.0\refint\UnoGame.dll
 C:\Users\arina\RiderProjects\uno\UnoGame\obj\Debug\net7.0\UnoGame.pdb
 C:\Users\arina\RiderProjects\uno\UnoGame\obj\Debug\net7.0\UnoGame.genruntimeconfig.cache
 C:\Users\arina\RiderProjects\uno\UnoGame\obj\Debug\net7.0\ref\UnoGame.dll
+C:\Users\arina\RiderProjects\uno\UnoGame\obj\Debug\net7.0\UnoGame.csproj.AssemblyReference.cache
+C:\Users\arina\RiderProjects\uno\UnoGame\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:\Users\arina\RiderProjects\uno\UnoGame\obj\Debug\net7.0\UnoGame.csproj.CopyComplete

@@ -1,5 +1,9 @@
 using System;
+using System.IO;
+using System.Text.Json;
 using UnoGame.GameObject;
+using UnoGame.GameLogic;
+using UnoGame.Rules;
 
 namespace UnoGame.GameMenu
 {
@@ -8,14 +12,32 @@ namespace UnoGame.GameMenu
         private int numberOfPlayers;
         private Player[] players;
         private bool useCustomRules;
+        private bool useTraditionalRules;
+        private CardDeckLogic cardDeckLogic;
+        private EndMenu endMenu;
+        private string gameName; // Added a field to store the game name.
+
+        public void SaveGameState(string fileName, GameState gameState)
+        {
+            string jsonString = JsonSerializer.Serialize(gameState);
+            File.WriteAllText(fileName, jsonString);
+            Console.WriteLine("Game state saved to " + fileName);
+        }
 
         public NewGame()
         {
+            CardDeck cardDeck = new CardDeck();
+            cardDeckLogic = new CardDeckLogic(cardDeck);
+            endMenu = new EndMenu();
         }
 
         public void Display()
         {
             bool readyToStart = false;
+
+            Console.Clear();
+            Console.WriteLine("Enter a name for your saved game:");
+            gameName = Console.ReadLine(); // Ask the user to name the game.
 
             while (!readyToStart)
             {
@@ -23,7 +45,6 @@ namespace UnoGame.GameMenu
                 Console.WriteLine("New Game Menu - Enter the number of players (2-10):");
                 numberOfPlayers = GetUserChoice(2, 10);
 
-                // Create an array to store player information
                 players = new Player[numberOfPlayers];
 
                 for (int i = 0; i < numberOfPlayers; i++)
@@ -42,18 +63,16 @@ namespace UnoGame.GameMenu
                     players[i] = new Player(playerName, type);
                 }
 
-                // Choose between original or custom rules
                 Console.WriteLine("Select rules:");
                 Console.WriteLine("1. Original Uno Rules");
                 Console.WriteLine("2. Custom Rules");
                 int rulesChoice = GetUserChoice(1, 2);
                 useCustomRules = rulesChoice == 2;
 
-                // Review and edit step
                 Console.Clear();
                 Console.WriteLine("Review and edit your choices:");
-                DisplayPlayerChoices(); // Display player names and types
-                DisplayRuleChoice(); // Display rule choice
+                DisplayPlayerChoices();
+                DisplayRuleChoice();
 
                 Console.WriteLine("1. Continue to start the game");
                 Console.WriteLine("2. Edit your choices");
@@ -61,25 +80,54 @@ namespace UnoGame.GameMenu
 
                 if (reviewChoice == 1)
                 {
-                    readyToStart = true; // Set readyToStart to true to exit the loop and start the game
+                    readyToStart = true;
                 }
-                // If the user chooses to edit, they will remain in the menu to make changes
             }
 
-            StartNewGame(); // Start the game when the user is ready
+            StartNewGame();
         }
 
-        private void StartNewGame()
+        public void StartNewGame()
         {
-            // Implement logic to start a new game with the players and custom rules if selected
+            RulesBase gameRules;
+            int initialCardCount;
+            int totalCardsInDeck;
+
             if (useCustomRules)
             {
-                // Implement custom rules logic
+                CustomRules customRules = new CustomRules();
+                customRules.Display();
+                gameRules = customRules;
+                initialCardCount = customRules.InitialCardCount;
+                totalCardsInDeck = customRules.TotalCardsInDeck;
             }
             else
             {
-                // Implement original Uno rules logic
+                TraditionalRules traditionalRules = new TraditionalRules();
+                gameRules = traditionalRules;
+                initialCardCount = traditionalRules.InitialCardCount;
+                totalCardsInDeck = traditionalRules.TotalCardsInDeck;
             }
+
+            CoreLogic coreLogic = new CoreLogic(cardDeckLogic, gameRules, players, endMenu);
+            coreLogic.StartGame(players.Length, players, initialCardCount, totalCardsInDeck);
+
+            // Save the game after it's played and finished
+            SaveGame();
+        }
+
+        public void SaveGame()
+        {
+            // Create a GameState object and populate it with data
+            GameState gameState = new GameState
+            {
+                Deck = cardDeckLogic.Deck, // Assuming Deck is a List<Card>
+                Players = players,
+            };
+
+            // Save the game state with the provided gameName
+            string fileName = $"{gameName}.json";
+            SaveGameState(fileName, gameState);
         }
 
         private void DisplayPlayerChoices()
@@ -97,7 +145,7 @@ namespace UnoGame.GameMenu
             Console.WriteLine(useCustomRules ? "Custom Rules" : "Original Uno Rules");
         }
 
-        private int GetUserChoice(int min, int max)
+        public int GetUserChoice(int min, int max)
         {
             int choice;
             while (true)
