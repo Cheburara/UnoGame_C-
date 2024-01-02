@@ -88,6 +88,13 @@ namespace UnoGame.GameLogic
             if (deckCards.Count > 0)
             {
                 topDiscard = deckCards[0]; // Set topDiscard as the first card
+                
+                if (topDiscard.Value == Enums.CardValue.Wild || topDiscard.Value == Enums.CardValue.WildDrawFour)
+                {
+                    ShuffleDeck();
+                    topDiscard = deckCards[0];
+                }
+                
                 deckCards.RemoveAt(0);
                 UpdateCurrentColorAndValue(topDiscard); // Update the current color and value
                 Console.WriteLine("The first card has been chosen and is " + topDiscard.ToString());

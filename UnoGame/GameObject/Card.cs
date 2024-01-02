@@ -4,6 +4,11 @@ namespace UnoGame.GameObject
 {
     public class Enums
     {
+        
+        public static T ParseEnum<T>(string value)
+        {
+            return (T)Enum.Parse(typeof(T), value, true);
+        }
         public enum CardColor
         {
             Red,
@@ -29,8 +34,8 @@ namespace UnoGame.GameObject
             Skip,
             Wild,
             WildDrawFour,
-            WildShuffleHands,
-            WildCustomizable,
+            // WildShuffleHands,
+            // WildCustomizable,
         }
 
         public enum CardScore

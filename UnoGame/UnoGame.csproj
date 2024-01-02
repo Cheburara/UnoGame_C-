@@ -45,4 +45,11 @@
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Include="bin\Backup\CoreLogic.cs" />
+      <Compile Include="bin\Backup\PlayerAction.cs" />
+      <Compile Include="bin\Backup\PlayerHand.cs" />
+      <Compile Include="bin\Backup\PlayerTurnLogic.cs" />
+    </ItemGroup>
+
 </Project>

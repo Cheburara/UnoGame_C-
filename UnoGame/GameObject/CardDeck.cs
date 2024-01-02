@@ -30,8 +30,8 @@ namespace UnoGame.GameObject
                     // Numbered cards
                     foreach (Enums.CardValue value in Enum.GetValues(typeof(Enums.CardValue)))
                     {
-                        if (value != Enums.CardValue.Wild && value != Enums.CardValue.WildDrawFour &&
-                            value != Enums.CardValue.WildShuffleHands && value != Enums.CardValue.WildCustomizable)
+                        if (value != Enums.CardValue.Wild && value != Enums.CardValue.WildDrawFour)
+                            // value != Enums.CardValue.WildShuffleHands && value != Enums.CardValue.WildCustomizable)
                         {
                             Enums.CardScore score = Enums.CardScore.Zero; // Default to zero for numbered cards
                             if (value != Enums.CardValue.Zero)
@@ -63,11 +63,11 @@ namespace UnoGame.GameObject
                     deck.Add(new Card { Color = color, Value = Enums.CardValue.WildDrawFour, Score = Enums.CardScore.WildDrawFour });
                     deck.Add(new Card { Color = color, Value = Enums.CardValue.WildDrawFour, Score = Enums.CardScore.WildDrawFour });
                     deck.Add(new Card { Color = color, Value = Enums.CardValue.WildDrawFour, Score = Enums.CardScore.WildDrawFour });
-                    deck.Add(new Card { Color = color, Value = Enums.CardValue.WildShuffleHands, Score = Enums.CardScore.WildShuffleHands });
-                    deck.Add(new Card { Color = color, Value = Enums.CardValue.WildCustomizable, Score = Enums.CardScore.WildCustomizable });
-                    deck.Add(new Card { Color = color, Value = Enums.CardValue.WildCustomizable, Score = Enums.CardScore.WildCustomizable });
-                    deck.Add(new Card { Color = color, Value = Enums.CardValue.WildCustomizable, Score = Enums.CardScore.WildCustomizable });
-                    
+                    // deck.Add(new Card { Color = color, Value = Enums.CardValue.WildShuffleHands, Score = Enums.CardScore.WildShuffleHands });
+                    // deck.Add(new Card { Color = color, Value = Enums.CardValue.WildCustomizable, Score = Enums.CardScore.WildCustomizable });
+                    // deck.Add(new Card { Color = color, Value = Enums.CardValue.WildCustomizable, Score = Enums.CardScore.WildCustomizable });
+                    // deck.Add(new Card { Color = color, Value = Enums.CardValue.WildCustomizable, Score = Enums.CardScore.WildCustomizable });
+                    //
                 }
             }
         }

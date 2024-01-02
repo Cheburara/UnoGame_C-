@@ -110,7 +110,7 @@ namespace UnoGame.GameMenu
             }
 
             CoreLogic coreLogic = new CoreLogic(cardDeckLogic, gameRules, players, endMenu);
-            coreLogic.StartGame(players.Length, players, initialCardCount, totalCardsInDeck);
+            coreLogic.StartGame(players, initialCardCount, totalCardsInDeck);
 
             // Save the game after it's played and finished
             SaveGame();
