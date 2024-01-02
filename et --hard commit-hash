@@ -1,0 +1,7 @@
+[33mc6aaffd[m[33m ([m[1;36mHEAD -> [m[1;32mmy-milestone1[m[33m, [m[1;31mUNO/master[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{0}: reset: moving to master
+[33m50c01f5[m HEAD@{1}: commit: Uno Entire Game Logic
+[33m18d0fce[m[33m ([m[1;31morigin/my-milestone1[m[33m)[m HEAD@{2}: Branch: renamed refs/heads/milestone1 to refs/heads/my-milestone1
+[33m18d0fce[m[33m ([m[1;31morigin/my-milestone1[m[33m)[m HEAD@{4}: commit: Initial commit for milestone 1
+[33mc6aaffd[m[33m ([m[1;36mHEAD -> [m[1;32mmy-milestone1[m[33m, [m[1;31mUNO/master[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{5}: checkout: moving from master to milestone1
+[33mc6aaffd[m[33m ([m[1;36mHEAD -> [m[1;32mmy-milestone1[m[33m, [m[1;31mUNO/master[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{6}: commit: New Game Menu elaborating
+[33m15a2667[m HEAD@{7}: commit (initial): Menu Logic
