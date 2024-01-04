@@ -56,11 +56,18 @@ namespace UnoGame.GameMenu
                     Console.WriteLine("Select player type:");
                     Console.WriteLine("1. Human");
                     Console.WriteLine("2. AI");
-                    int playerType = GetUserChoice(1, 2);
+                    int playerTypeChoice = GetUserChoice(1, 2);
 
-                    PlayerType type = playerType == 1 ? PlayerType.Human : PlayerType.AI;
+                    PlayerType playerType = playerTypeChoice == 1 ? PlayerType.Human : PlayerType.AI;
 
-                    players[i] = new Player(playerName, type);
+                    if (playerType == PlayerType.Human)
+                    {
+                        players[i] = new Player(playerName, playerType);
+                    }
+                    else
+                    {
+                        players[i] = new AiPlayer(playerName, cardDeckLogic);
+                    }
                 }
 
                 Console.WriteLine("Select rules:");

@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
 using UnoGame.GameObject;
-using UnoGame.Rules;
+
 
 namespace UnoGame.GameLogic
 {
@@ -11,8 +9,9 @@ namespace UnoGame.GameLogic
         private Player[] _players;
         private WinningLogic _winningLogic;
         private int _currentPlayerIndex;
-        private Card selectedCard;
+        // private Card selectedCard;
         private TurnDirection.Enums.TurnDirection currentDirection;
+        // private List<Card> playedCards = new List<Card>();
 
         public event Action<Player> GameEnded;
 
@@ -26,112 +25,146 @@ namespace UnoGame.GameLogic
         }
 
         public void PlayNextTurn()
+{
+    try
+    {
+        Enums.CardColor currentColor = _cardDeckLogic.GetCurrentColor();
+        Enums.CardValue currentValue = _cardDeckLogic.GetCurrentValue();
+
+        Player currentPlayer = _players[_currentPlayerIndex];
+
+        Console.WriteLine($"{currentPlayer.Name}'s turn");
+        DisplayPlayerHand(currentPlayer);
+        
+        DisplayTopCard();
+
+        // Player's turn to play
+        bool playedCard = false;
+
+        if (currentPlayer.Type == PlayerType.AI)
         {
-            try
+            // AI Player's turn to play
+            if (currentPlayer is AiPlayer aiPlayer)
             {
-                Enums.CardColor currentColor = _cardDeckLogic.GetCurrentColor();
-                Enums.CardValue currentValue = _cardDeckLogic.GetCurrentValue();
+                PlayAiPlayerTurn(aiPlayer);
+                playedCard = true;
+            }
+        }
 
-                Player currentPlayer = _players[_currentPlayerIndex];
+        while (!playedCard && currentPlayer.Type != PlayerType.AI)
+        {
+            Console.Write("Enter the index of the card you want to play or 'D' to draw a card: ");
+            string input = Console.ReadLine();
+
+            if (input.ToLower() == "d")
+            {
+                if (_cardDeckLogic.IsDeckEmpty())
+                {
+                    Console.WriteLine("The deck is empty. The game will end.");
+                    GameEnded?.Invoke(null); 
+                    return;
+                }
+                // Player chose to draw a card
                 
-
-                Console.WriteLine($"{currentPlayer.Name}'s turn");
-                DisplayPlayerHand(currentPlayer);
-
-                // Display the current top card
-                DisplayTopCard();
-
-                // Player's turn to play
-                bool playedCard = false;
-
-                while (!playedCard)
-                {
-                    Console.Write("Enter the index of the card you want to play or 'D' to draw a card: ");
-                    string input = Console.ReadLine();
-
-                    if (input.ToLower() == "d")
-                    {
-                        // Player chose to draw a card
-                        Card drawnCard = _cardDeckLogic.DrawCard();
-                        currentPlayer.DrawCard(drawnCard);
-
-                        Console.WriteLine($"{currentPlayer.Name} drew a card: {drawnCard}");
-                        playedCard = true; // Break the loop after drawing a card
-                    }
-                    else if (int.TryParse(input, out int selectedIndex) && selectedIndex >= 0 && selectedIndex < currentPlayer.GetCardsInHand().Count)
-                    {
-                        // Player is trying to play a card
-                        Card selectedCard = currentPlayer.GetCardsInHand()[selectedIndex];
-
-                        if (IsValidCardToPlay(selectedCard, currentColor, currentValue))
-                        {
-                            // Valid card to play
-                            Console.WriteLine($"{currentPlayer.Name} played: {selectedCard}");
-                            currentPlayer.PlayCard(selectedCard);
-
-                            // Update the current color and value
-                            _cardDeckLogic.UpdateCurrentColorAndValue(selectedCard);
-                            
-                            HandleWildCardEffects(selectedCard);
-                            
-                            HandleSpecialCards(selectedCard);
-                            
-                            playedCard = true;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid card selection. Try again.");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid input. Try again.");
-                    }
-                }
-
-                // Check for win conditions
-                if (_winningLogic != null && WinningLogic.CheckForWin(currentPlayer))
-                {
-                    Console.WriteLine($"{currentPlayer.Name} has won!");
-                    GameEnded?.Invoke(currentPlayer);
-                }
-
-                // Move to the next player
-                _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Length;
+                Card drawnCard = _cardDeckLogic.DrawCard();
+                currentPlayer.Hand.AddCardToHand(drawnCard);
+                
+                Console.WriteLine($"{currentPlayer.Name} drew a card: {drawnCard}");
+                playedCard = true; // Break the loop after drawing a card
             }
-            catch (Exception ex)
+            else if (int.TryParse(input, out int selectedIndex) && selectedIndex >= 0 && selectedIndex < currentPlayer.GetCardsInHand().Count)
             {
-                Console.WriteLine($"An exception occurred: {ex}");
+                // Player is trying to play a card
+                Card selectedCard = currentPlayer.GetCardsInHand()[selectedIndex];
+
+                if (IsValidCardToPlay(selectedCard, currentColor, currentValue))
+                {
+                    // Valid card to play
+                    Console.WriteLine($"{currentPlayer.Name} played: {selectedCard}");
+                    currentPlayer.PlayCard(selectedCard);
+
+                    // Update the current color and value
+
+                    HandleWildCardEffects(selectedCard);
+
+                    HandleSpecialCards(selectedCard);
+                    
+                    _cardDeckLogic.UpdateCurrentColorAndValue(selectedCard);
+
+                    playedCard = true;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid card selection. Try again.");
+                }
             }
+            else
+            {
+                Console.WriteLine("Invalid input. Try again.");
+            }
+        }
+
+        // Check for win conditions
+        if (_winningLogic != null && WinningLogic.CheckForWin(currentPlayer))
+        {
+            Console.WriteLine($"{currentPlayer.Name} has won!");
+            GameEnded?.Invoke(currentPlayer);
+        }
+
+        // Move to the next player
+        _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Length;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"An exception occurred: {ex}");
+    }
+}
+        
+        private void PlayAiPlayerTurn(AiPlayer aiPlayer)
+        {
+            // Call the AI player's logic to play a card
+            aiPlayer.PlayCard(_cardDeckLogic.GetTopDiscardCard());
+            
+            Card playedCard = aiPlayer.GetLastPlayedCard();
+            
+            HandleWildCardEffects(playedCard);
+
+            if (playedCard != null)
+            {
+                // Update the current color and value with the played card
+                _cardDeckLogic.UpdateCurrentColorAndValue(playedCard);
+            }
+            
         }
         
         private void HandleWildCardEffects(Card playedCard)
-{
-    if (playedCard.Value == Enums.CardValue.Wild || playedCard.Value == Enums.CardValue.WildDrawFour)
-    {
-        // Ask the player to choose a new color
-        Console.Write("Choose a new color (Red, Blue, Yellow, Green): ");
-        string chosenColor = Console.ReadLine();
-        
-        Console.WriteLine($"Chosen color: {chosenColor}");
-        
-        Card selectedCard = new Card { Color = playedCard.Color, Value = playedCard.Value };
-
-        // Update the current color to the chosen color
-        _cardDeckLogic.UpdateCurrentColorAndValue(new Card { Color = Enums.ParseEnum<Enums.CardColor>(chosenColor), Value = selectedCard.Value });
-
-        if (playedCard.Value == Enums.CardValue.WildDrawFour)
         {
-            // Draw four cards for the next player
-            Player nextPlayer = _players[(_currentPlayerIndex + 1) % _players.Length];
-            for (int i = 0; i < 4; i++)
+            if (playedCard != null && (playedCard.Value == Enums.CardValue.Wild || playedCard.Value == Enums.CardValue.WildDrawFour))
             {
-                Card drawnCard = _cardDeckLogic.DrawCard();
-                nextPlayer.DrawCard(drawnCard);
+                if (_players[_currentPlayerIndex] is AiPlayer aiPlayer)
+                {
+                    // Use AI-specific logic to choose the color for Wild and Wild Draw Four cards
+                    Enums.CardColor chosenColor = aiPlayer.ChooseColorForWildCard();
+                    playedCard.Color = chosenColor;
+                }
+                else
+                {
+                    // Assume a default color for non-AI players or handle differently
+                    playedCard.Color = Enums.CardColor.Red;
+                }
+
+                if (playedCard.Value == Enums.CardValue.WildDrawFour)
+                {
+                    // Draw four cards for the next player
+                    Player nextPlayer = _players[(_currentPlayerIndex + 1) % _players.Length];
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Card drawnCard = _cardDeckLogic.DrawCard();
+                        nextPlayer.DrawCard(drawnCard);
+                    }
+                }
             }
         }
-    }
-}
         private void HandleSpecialCards(Card playedCard)
         {
             switch (playedCard.Value)

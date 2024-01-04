@@ -59,6 +59,27 @@ namespace UnoGame.GameLogic
                 deck.GetDeck().RemoveAt(0); // Remove the drawn card from the deck
 
                 Console.WriteLine("Drew a card: " + drawnCard);
+
+                // Check if the drawn card is playable
+                while (!IsPlayableCard(drawnCard))
+                {
+                    Console.WriteLine("Drew an unplayable card: " + drawnCard);
+
+                    // Draw a new card from the deck
+                    if (deck.GetDeck().Count > 0)
+                    {
+                        drawnCard = deck.GetDeck()[0];
+                        deck.GetDeck().RemoveAt(0);
+
+                        Console.WriteLine("Drew a new card: " + drawnCard);
+                    }
+                    else
+                    {
+                        Console.WriteLine("No more cards in the deck.");
+                        return null; // Exit the method if the deck is empty
+                    }
+                    return drawnCard;
+                }
                 return drawnCard;
             }
 
@@ -89,6 +110,9 @@ namespace UnoGame.GameLogic
             {
                 topDiscard = deckCards[0]; // Set topDiscard as the first card
                 
+                topDiscard = deckCards.FirstOrDefault(card =>
+                    card.Value != Enums.CardValue.Wild && card.Value != Enums.CardValue.WildDrawFour);
+                
                 if (topDiscard.Value == Enums.CardValue.Wild || topDiscard.Value == Enums.CardValue.WildDrawFour)
                 {
                     ShuffleDeck();
@@ -110,13 +134,31 @@ namespace UnoGame.GameLogic
             return topDiscard;
         }
 
-        // New method to update current color and value based on a card
+        public bool IsPlayableCard(Card card)
+        {
+            Enums.CardColor currentColor = GetCurrentColor();
+            Enums.CardValue currentValue = GetCurrentValue();
+            
+            if (card.Value == Enums.CardValue.Wild || card.Value == Enums.CardValue.WildDrawFour)
+            {
+                return true; // Wild cards are always playable
+            }
+            
+            // Check if the card is playable based on the current color and value
+            return card.Color == currentColor || card.Value == currentValue;
+            
+        }
         public void UpdateCurrentColorAndValue(Card card)
         {
             currentColor = card.Color;
             currentValue = card.Value;
             topDiscard = card;
             Console.WriteLine("Current color: " + currentColor + ", Current value: " + currentValue);
+        }
+        
+        public bool IsDeckEmpty()
+        {
+            return deck.GetDeck().Count == 0;
         }
     }
 }

@@ -12,6 +12,8 @@ namespace UnoGame.GameLogic
         private UnoGameLogic unoGameLogic;
         private CardDeckLogic cardDeckLogic;
         private Player[] players;
+        private EndMenu endMenu;
+        private WinningLogic winningLogic;
 
         public CoreLogic(CardDeckLogic deckLogic, RulesBase gameRules, Player[] gamePlayers, EndMenu endMenu)
         {
@@ -19,6 +21,7 @@ namespace UnoGame.GameLogic
             unoGameLogic.GameEnded += HandleGameEnded;
             players = gamePlayers;
             cardDeckLogic = deckLogic;
+            this.endMenu = endMenu; 
         }
 
         public void StartGame(Player[] gamePlayers, int initialCardCount, int totalCardsInDeck)
@@ -76,16 +79,26 @@ namespace UnoGame.GameLogic
 
         private void HandleGameEnded(Player winner)
         {
-            if (winner != null)
-            {
-                // You might want to handle the end menu display here
-                // endMenu.DisplayEndMessage(winner.Name);
-            }
+            endMenu.DisplayEndMessage(winner.Name);
         }
 
         private bool CheckForGameEnd()
         {
-            // Implement game end conditions...
+            /*foreach (var player in players)
+            {
+                if (WinningLogic.CheckForWin(player))
+                {
+                    // Additional logic can be added here before announcing the winner
+                    if (player.Hand.GetCardCount() == 1)
+                    {
+                        Console.WriteLine($"{player.Name} shouts 'Uno!'");
+                    }
+
+                    WinningLogic.AnnounceWinner(player);
+                    return true;
+                }
+            }*/
+
             return false;
         }
     }

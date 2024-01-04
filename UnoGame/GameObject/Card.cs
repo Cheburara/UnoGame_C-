@@ -85,5 +85,17 @@ namespace UnoGame.GameObject
             }
             return Color + " " + Value;
         }
+        
+        public bool CanBePlayedOn(Card otherCard)
+        {
+            return this.Color == Enums.CardColor.Black // WildDrawFour is always playable
+                   || (this.Value == Enums.CardValue.WildDrawFour && this.Color == otherCard.Color) // WildDrawFour with matching color
+                   || this.Value == otherCard.Value // Same value
+                   || this.Color == otherCard.Color; // Same color
+        }
+        public bool IsWild()
+        {
+            return Color == Enums.CardColor.Black && (Value == Enums.CardValue.Wild || Value == Enums.CardValue.WildDrawFour);
+        }
     }
 }
