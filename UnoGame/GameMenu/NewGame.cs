@@ -1,9 +1,8 @@
 using System;
-using System.IO;
-using System.Text.Json;
 using UnoGame.GameObject;
 using UnoGame.GameLogic;
 using UnoGame.Rules;
+using UnoGame.Storage;
 
 namespace UnoGame.GameMenu
 {
@@ -14,30 +13,38 @@ namespace UnoGame.GameMenu
         private bool useCustomRules;
         private bool useTraditionalRules;
         private CardDeckLogic cardDeckLogic;
+        private CustomRules customRules;
         private EndMenu endMenu;
-        private string gameName; // Added a field to store the game name.
-
-        public void SaveGameState(string fileName, GameState gameState)
-        {
-            string jsonString = JsonSerializer.Serialize(gameState);
-            File.WriteAllText(fileName, jsonString);
-            Console.WriteLine("Game state saved to " + fileName);
-        }
+        private string gameName;
+        private StorageType storageType;
+        private GameStateStorage gameStateStorage;
+        private SaveGame saveGame;
 
         public NewGame()
         {
             CardDeck cardDeck = new CardDeck();
             cardDeckLogic = new CardDeckLogic(cardDeck);
             endMenu = new EndMenu();
+            this.saveGame = saveGame;
+            gameStateStorage = new GameStateStorage();
         }
 
         public void Display()
         {
+            Console.WriteLine("Select storage type:");
+            Console.WriteLine($"{(int)StorageType.JsonFile}. Save to JSON file");
+            Console.WriteLine($"{(int)StorageType.Database}. Save to Database");
+            int storageTypeChoice = GetUserChoice(1, 2);
+            storageType = (StorageType)storageTypeChoice;
+
+            GameStateStorage gameStateStorage = new GameStateStorage();
+
             bool readyToStart = false;
 
             Console.Clear();
-            Console.WriteLine("Enter a name for your saved game:");
-            gameName = Console.ReadLine(); // Ask the user to name the game.
+            Console.WriteLine("Enter a name for your game:");
+            gameName = Console.ReadLine();
+            gameStateStorage.GameName = gameName;
 
             while (!readyToStart)
             {
@@ -91,6 +98,8 @@ namespace UnoGame.GameMenu
                 }
             }
 
+            SaveGame();
+
             StartNewGame();
         }
 
@@ -100,10 +109,83 @@ namespace UnoGame.GameMenu
             int initialCardCount;
             int totalCardsInDeck;
 
+            CreateGameRules(out gameRules, out initialCardCount, out totalCardsInDeck);
+            
+
+            CoreLogic coreLogic = new CoreLogic(cardDeckLogic, gameRules, players, endMenu, gameName );
+            coreLogic.StartGame(players, initialCardCount, totalCardsInDeck);
+
+            // Save the game after it's played and finished
+            // SaveGame();
+        }
+
+        public void SaveGame()
+        {
+            RulesBase gameRules;
+            int initialCardCount;
+            int totalCardsInDeck;
+
+            CreateGameRules(out gameRules, out initialCardCount, out totalCardsInDeck);
+
+            GameState gameState = GetGameState(gameRules, initialCardCount, totalCardsInDeck);
+
+            if (!gameName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+            {
+                // Append ".json" extension to gameName if it doesn't already have it
+                gameName += ".json";
+            }
+
+            if (storageType == StorageType.JsonFile)
+            {
+                gameStateStorage.SaveToJSON(gameName, gameState);
+            }
+            else if (storageType == StorageType.Database)
+            {
+                gameStateStorage.SaveToDatabase(gameState);
+            }
+            else
+            {
+                saveGame.Save(gameName, cardDeckLogic, players);
+            }
+        }
+
+        private GameState GetGameState(RulesBase gameRules, int initialCardCount, int totalCardsInDeck)
+        {
+            var gameState = new GameState
+            {
+                StorageType = storageType,
+                GameName = gameName,
+                UseCustomRules = useCustomRules,
+                UseTraditionalRules = !useCustomRules,
+                NumberOfPlayers = numberOfPlayers,
+                Players = players,
+                Deck = cardDeckLogic.Deck,
+            };
+            
             if (useCustomRules)
             {
-                CustomRules customRules = new CustomRules();
-                customRules.Display();
+                gameState.CustomRules = (CustomRules)gameRules;
+                gameState.CustomRules.TotalCardsInDeck = totalCardsInDeck;
+                gameState.CustomRules.InitialCardCount = initialCardCount;
+            }
+            else
+            {
+                gameState.TraditionalRules = (TraditionalRules)gameRules;
+            }
+            return gameState;
+            
+        }
+
+        private void CreateGameRules(out RulesBase gameRules, out int initialCardCount, out int totalCardsInDeck)
+        {
+            if (useCustomRules)
+            {
+                if (customRules == null)
+                {
+                    customRules = new CustomRules();
+                    customRules.Display();
+                }
+
                 gameRules = customRules;
                 initialCardCount = customRules.InitialCardCount;
                 totalCardsInDeck = customRules.TotalCardsInDeck;
@@ -115,26 +197,6 @@ namespace UnoGame.GameMenu
                 initialCardCount = traditionalRules.InitialCardCount;
                 totalCardsInDeck = traditionalRules.TotalCardsInDeck;
             }
-
-            CoreLogic coreLogic = new CoreLogic(cardDeckLogic, gameRules, players, endMenu);
-            coreLogic.StartGame(players, initialCardCount, totalCardsInDeck);
-
-            // Save the game after it's played and finished
-            SaveGame();
-        }
-
-        public void SaveGame()
-        {
-            // Create a GameState object and populate it with data
-            GameState gameState = new GameState
-            {
-                Deck = cardDeckLogic.Deck, // Assuming Deck is a List<Card>
-                Players = players,
-            };
-
-            // Save the game state with the provided gameName
-            string fileName = $"{gameName}.json";
-            SaveGameState(fileName, gameState);
         }
 
         private void DisplayPlayerChoices()

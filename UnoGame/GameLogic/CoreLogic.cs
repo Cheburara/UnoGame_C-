@@ -2,6 +2,7 @@ using UnoGame.GameObject;
 using UnoGame.GameLogic;
 using UnoGame.GameMenu;
 using UnoGame.Rules;
+using UnoGame.Storage;
 using System;
 using System.Collections.Generic;
 
@@ -14,14 +15,22 @@ namespace UnoGame.GameLogic
         private Player[] players;
         private EndMenu endMenu;
         private WinningLogic winningLogic;
+        private SaveGame saveGame;
+        private GameStateStorage gameStateStorage;
+        private string gameName; 
+        
+        public string FileName { get; set; }
 
-        public CoreLogic(CardDeckLogic deckLogic, RulesBase gameRules, Player[] gamePlayers, EndMenu endMenu)
+        public CoreLogic(CardDeckLogic deckLogic, RulesBase gameRules, Player[] gamePlayers, EndMenu endMenu, string gameName)
         {
             unoGameLogic = new UnoGameLogic(deckLogic, gamePlayers, new WinningLogic());
             unoGameLogic.GameEnded += HandleGameEnded;
             players = gamePlayers;
             cardDeckLogic = deckLogic;
-            this.endMenu = endMenu; 
+            this.endMenu = endMenu;
+            saveGame = new SaveGame();
+            gameStateStorage = new GameStateStorage();
+            this.gameName = gameName;
         }
 
         public void StartGame(Player[] gamePlayers, int initialCardCount, int totalCardsInDeck)
@@ -38,12 +47,26 @@ namespace UnoGame.GameLogic
 
             int currentPlayerIndex = 0;
 
-            while (!CheckForGameEnd())
+            while (true)
             {
                 unoGameLogic.PlayNextTurn();
                 currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
-            }
 
+                if (CheckForGameEnd())
+                {
+                    Console.WriteLine("Game over!");
+
+                    break;
+                }
+                
+                if (CheckForStopCondition())
+                {
+                    Console.WriteLine("Game stopped by user.");
+                    break;
+                }
+
+                UpdateGameState(); // Capture and save the updated game state
+            }
             // Console.Out.Flush();
         }
 
@@ -63,6 +86,9 @@ namespace UnoGame.GameLogic
 
             Console.WriteLine($"The amount of cards in deck: {totalCardsInDeck}");
             Console.WriteLine($"First card: {firstCard}");
+
+            // Capture and save the initial game state
+            UpdateGameState();
         }
 
         private void DealInitialHands(int numberOfPlayers, int initialCardsNumber)
@@ -84,7 +110,14 @@ namespace UnoGame.GameLogic
 
         private bool CheckForGameEnd()
         {
-            /*foreach (var player in players)
+            if (cardDeckLogic.Deck.Count == 0)
+            {
+                Console.WriteLine("The deck is empty. The game ends in a draw.");
+                endMenu.DisplayEndMessage("Draw");
+                return true; // End the game
+            }
+
+            foreach (var player in players)
             {
                 if (WinningLogic.CheckForWin(player))
                 {
@@ -95,11 +128,92 @@ namespace UnoGame.GameLogic
                     }
 
                     WinningLogic.AnnounceWinner(player);
-                    return true;
+                    endMenu.DisplayEndMessage(player.Name); // Display the end message
+                    return true; // End the game
                 }
-            }*/
+            }
 
-            return false;
+            return false; // Continue the game
+        }
+
+        private void UpdateGameState()
+        {
+            string directoryPath = @"C:\Users\arina\RiderProjects\UNO\UnoGame\JSON";
+
+            // Load the existing game state from the JSON file
+            string filePath = Path.Combine(directoryPath, gameName);
+            GameState existingGameState = gameStateStorage.LoadFromJSON(filePath);
+
+            if (existingGameState != null)
+            {
+                // Update the relevant values in the existing game state
+                existingGameState.TotalCardsInDeck = cardDeckLogic.Deck.Count;
+
+                // Update the top discard card
+                existingGameState.TopCard = cardDeckLogic.GetTopDiscardCard();
+
+                // Populate the cards in players' hands
+                existingGameState.PlayersHands = new Dictionary<string, List<Card>>();
+                foreach (var player in players)
+                {
+                    existingGameState.PlayersHands[player.Name] = new List<Card>(player.Hand.GetCards());
+                }
+
+                // Update the deck
+                existingGameState.Deck = new List<Card>(cardDeckLogic.Deck);
+
+                // Save the updated game state back to the JSON file
+                gameStateStorage.SaveToJSON(filePath, existingGameState);
+            }
+            else
+            {
+                Console.WriteLine("Failed to load the existing game state. Update aborted.");
+            }
+        }
+
+        private GameState GetGameState()
+        {
+            // Capture the current state of the game and return a GameState object
+            return new GameState
+            {
+                StorageType = StorageType.JsonFile,
+                // Add other properties based on your game state
+            };
+        }
+        private bool CheckForStopCondition()
+        {
+            Console.WriteLine("Do you want to stop the game?");
+            Console.WriteLine("1. Yes");
+            Console.WriteLine("2. No");
+
+            int choice = GetUserChoice(1, 2);
+
+            if (choice == 1)
+            {
+                DisplayExitMenu();
+                return true; // Stop the game
+            }
+
+            return false; // Continue the game
+        }
+        
+        public int GetUserChoice(int min, int max)
+        {
+            int choice;
+            while (true)
+            {
+                if (int.TryParse(Console.ReadLine(), out choice) && choice >= min && choice <= max)
+                {
+                    return choice;
+                }
+                Console.WriteLine("Invalid input. Please enter a valid choice.");
+            }
+        }
+        
+        private void DisplayExitMenu()
+        {
+            ExitGame exitMenu = new ExitGame();
+            exitMenu.Display();
         }
     }
 }

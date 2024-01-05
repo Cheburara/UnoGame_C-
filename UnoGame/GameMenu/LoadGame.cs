@@ -1,23 +1,22 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using UnoGame.Storage;
 using UnoGame.GameObject;
+using UnoGame.GameLogic;
+using UnoGame.Rules;
 
 namespace UnoGame.GameMenu
 {
     public class LoadGame
     {
-        public LoadGame()
-        {
-        }
-
         public void Display()
         {
             Console.Clear();
             Console.WriteLine("Load Game Menu - Enter the name of the saved game file:");
             string fileName = Console.ReadLine();
-            
-            if (File.Exists(fileName))
+
+            if (DoesFileExist(fileName))
             {
                 Console.WriteLine("Game found. Do you want to load this game?");
                 Console.WriteLine("1. Yes");
@@ -27,20 +26,17 @@ namespace UnoGame.GameMenu
 
                 if (choice == 1)
                 {
-                    // Implement logic to load the game state from the file
                     GameState loadedGameState = LoadGameState(fileName);
 
                     if (loadedGameState != null)
                     {
-                        // Continue the game using the loaded game state
-                        ContinueGame(loadedGameState);
+                        ContinueGame(loadedGameState, fileName);
                     }
                     else
                     {
                         Console.WriteLine("Failed to load the game state. Returning to the main menu.");
                     }
                 }
-                // No need to add logic for choice == 2 since it's "No" (i.e., not loading the game).
             }
             else
             {
@@ -56,36 +52,104 @@ namespace UnoGame.GameMenu
                 }
                 else if (choice == 2)
                 {
-                    // Return to the main menu
                     Console.WriteLine("Returning to the Main Menu...");
                 }
             }
         }
 
-        private GameState LoadGameState(string fileName)
+        private static bool DoesFileExist(string fileName)
         {
-            if (File.Exists(fileName))
+            string directoryPath = @"C:\Users\arina\RiderProjects\UNO\UnoGame\JSON";
+            string filePath = Path.Combine(directoryPath, fileName);
+            return File.Exists(filePath) || File.Exists(filePath + ".json");
+        }
+
+        private static GameState LoadGameState(string fileName)
+        {
+            string directoryPath =@"C:\Users\arina\RiderProjects\UNO\UnoGame\JSON";
+            string filePath = Path.Combine(directoryPath, fileName);
+
+            if (File.Exists(filePath))
             {
                 try
                 {
-                    string jsonString = File.ReadAllText(fileName);
-                    return JsonSerializer.Deserialize<GameState>(jsonString);
+                    // Create an instance of GameStateStorage
+                    GameStateStorage gameStateStorage = new GameStateStorage();
+
+                    // Use the instance to load the game state from JSON
+                    GameState loadedGameState = gameStateStorage.LoadFromJSON(filePath);
+
+                    if (loadedGameState != null)
+                    {
+                        return loadedGameState;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to load the game state. Returning to the main menu.");
+                    }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Failed to load the game state: " + ex.Message);
                 }
             }
+            else
+            {
+                Console.WriteLine("File not found: " + filePath);
+            }
+
             return null; // File not found or failed to load game state
         }
 
-        private void ContinueGame(GameState gameState)
+
+        private static void ContinueGame(GameState gameState, string gameName)
         {
-            // Implement logic to continue the game using the loaded game state
             Console.WriteLine("Game loaded successfully. Continuing the game...");
+    
+            CardDeckLogic cardDeckLogic = new CardDeckLogic(new CardDeck());
+            EndMenu endMenu = new EndMenu();
+    
+            RulesBase gameRules;
+            int initialCardCount;
+            int totalCardsInDeck;
+
+            if (gameState.UseCustomRules && gameState.CustomRules != null)
+            {
+                gameRules = gameState.CustomRules;
+                initialCardCount = gameState.CustomRules.InitialCardCount;
+                totalCardsInDeck = gameState.CustomRules.TotalCardsInDeck;
+            }
+            else
+            {
+                gameRules = gameState.TraditionalRules; // Assuming you have TraditionalRules in your GameState
+                initialCardCount = gameState.TraditionalRules.InitialCardCount;
+                totalCardsInDeck = gameState.TraditionalRules.TotalCardsInDeck;
+            }
+
+            CoreLogic coreLogic = new CoreLogic(cardDeckLogic, gameRules, gameState.Players, endMenu, gameName);
+
+            // Display the current game state or perform any other necessary setup
+            DisplayCurrentGameState(gameState);
+
+            // Implement logic to continue the game using the loaded game state
+            coreLogic.StartGame(gameState.Players, initialCardCount, totalCardsInDeck);
+        }
+        
+        private static void DisplayCurrentGameState(GameState gameState)
+        {
+            Console.WriteLine($"Current Game State for {gameState.GameName}:");
+    
+            foreach (var player in gameState.Players)
+            {
+                Console.WriteLine($"{player.Name}'s hand: {string.Join(", ", player.Hand)}");
+            }
+
+            Console.WriteLine($"Top card on the deck: {gameState.Deck.Last()}");
+    
+            // Add more information based on your game structure
         }
 
-        private int GetUserChoice(int min, int max)
+        private static int GetUserChoice(int min, int max)
         {
             int choice;
             while (true)
@@ -94,6 +158,7 @@ namespace UnoGame.GameMenu
                 {
                     return choice;
                 }
+
                 Console.WriteLine("Invalid input. Please enter a valid choice.");
             }
         }

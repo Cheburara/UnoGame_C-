@@ -39,6 +39,7 @@
     <ItemGroup>
       <Folder Include=".git\objects\info\" />
       <Folder Include=".git\refs\tags\" />
+      <Folder Include="JSON\" />
     </ItemGroup>
 
     <ItemGroup>

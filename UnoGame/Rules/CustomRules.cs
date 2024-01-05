@@ -5,7 +5,6 @@ public class CustomRules : RulesBase
 {
     public TurnDirection.Enums.TurnDirection TurnOrder { get; set; }
     public int InitialCardCount { get; set; }
-    
     public int TotalCardsInDeck { get; set; }
 
     public void Display()
