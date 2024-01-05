@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+
 
 namespace UnoGame.GameObject
 {
@@ -69,20 +68,6 @@ namespace UnoGame.GameObject
                     // deck.Add(new Card { Color = color, Value = Enums.CardValue.WildCustomizable, Score = Enums.CardScore.WildCustomizable });
                     //
                 }
-            }
-        }
-
-        public void ShuffleDeck()
-        {
-            Random random = new Random();
-            int n = deck.Count;
-            while (n > 1)
-            {
-                n--;
-                int k = random.Next(n + 1);
-                Card card = deck[k];
-                deck[k] = deck[n];
-                deck[n] = card;
             }
         }
     }

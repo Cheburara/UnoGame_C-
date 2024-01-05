@@ -100,10 +100,12 @@ namespace UnoGame.GameObject
     {
         private CardDeckLogic _cardDeckLogic;
         private Card _playedCard;
-
+        private Enums.CardColor _chosenColor;
         public AiPlayer(string name, CardDeckLogic cardDeckLogic) : base(name, PlayerType.AI)
         {
             _cardDeckLogic = cardDeckLogic;
+            _chosenColor = Hand.GetCardCount() > 0 ? Enums.CardColor.Red : Enums.CardColor.Black;
+
         }
 
         public override void PlayCard(Card topCard)
@@ -116,8 +118,8 @@ namespace UnoGame.GameObject
                 // Check if the selected card is Wild or WildDrawFour
                 if (_playedCard.Value == Enums.CardValue.Wild || _playedCard.Value == Enums.CardValue.WildDrawFour)
                 {
-                    Enums.CardColor chosenColor = ChooseColorForWildCard();
-                    _playedCard.Color = chosenColor;
+                    // Use the stored chosen color instead of choosing it again
+                    _playedCard.Color = ChooseColorForWildCard();
                 }
 
                 // Console.WriteLine($"AI {Name} played a card: {_playedCard}");
@@ -217,32 +219,33 @@ namespace UnoGame.GameObject
 
             if (cardsInHand == null || cardsInHand.Count == 0)
             {
-                // Handle empty hand or null reference
                 Console.WriteLine($"AI {Name}'s hand is empty or null.");
-                // You might want to return a default color or handle this case differently
-                return Enums.CardColor.Red; // Change this to an appropriate default color
+                return Enums.CardColor.Red; 
             }
 
-            // Count the occurrences of each color
-            var colorOccurrences = cardsInHand
-                .Where(card => card.Color != Enums.CardColor.Black) // Exclude cards with no color (Wild cards)
-                .GroupBy(card => card.Color)
-                .ToDictionary(group => group.Key, group => group.Count());
+            // Count the occurrences of each color only once per turn
+            if (_chosenColor == Enums.CardColor.Black)
+            {
+                var colorOccurrences = cardsInHand
+                    .Where(card => card.Color != Enums.CardColor.Black) // Exclude cards with no color (Wild cards)
+                    .GroupBy(card => card.Color)
+                    .ToDictionary(group => group.Key, group => group.Count());
 
-            // Find the color with the maximum occurrences
-            Enums.CardColor mostFrequentColor = colorOccurrences.OrderByDescending(kv => kv.Value).FirstOrDefault().Key;
+                // Find the color with the maximum occurrences
+                _chosenColor = colorOccurrences.OrderByDescending(kv => kv.Value).FirstOrDefault().Key;
 
-            Console.WriteLine($"Choosing color based on the most frequent color in hand: {mostFrequentColor}");
+                Console.WriteLine($"Choosing color based on the most frequent color in hand: {_chosenColor}");
+            }
 
-            return mostFrequentColor;
+            return _chosenColor;
         }
+
 
         private Card GetWildDrawFourCard()
         {
             List<Card> cardsInHand = GetCardsInHand();
             if (cardsInHand != null && cardsInHand.Count > 0)
             {
-                // Filter out null cards and cards with a value other than WildDrawFour
                 return cardsInHand.FirstOrDefault(card => card != null && card.Value == Enums.CardValue.WildDrawFour);
             }
 

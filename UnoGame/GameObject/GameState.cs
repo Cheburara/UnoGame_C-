@@ -19,6 +19,8 @@ public class GameState
     public int InitialCardCount { get; set; } 
     public int NumberOfPlayers { get; set; }
     public Player[] Players { get; set; }
+    
+    public Player[] ShuffledPlayers { get; set; }
     public List<Card> Deck { get; set; }
     
     public Card TopCard { get; set; }

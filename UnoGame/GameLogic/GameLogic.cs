@@ -75,7 +75,7 @@ namespace UnoGame.GameLogic
             else if (int.TryParse(input, out int selectedIndex) && selectedIndex >= 0 && selectedIndex < currentPlayer.GetCardsInHand().Count)
             {
                 // Player is trying to play a card
-                Card selectedCard = currentPlayer.GetCardsInHand()[selectedIndex];
+                Card selectedCard = currentPlayer.GetCardsInHand()[selectedIndex - 1];
 
                 if (IsValidCardToPlay(selectedCard, currentColor, currentValue))
                 {
@@ -85,7 +85,7 @@ namespace UnoGame.GameLogic
 
                     // Update the current color and value
 
-                    HandleWildCardEffects(selectedCard);
+                    HandleWildCardEffects(selectedCard, currentPlayer);
 
                     HandleSpecialCards(selectedCard);
                     
@@ -124,60 +124,68 @@ namespace UnoGame.GameLogic
         {
             // Call the AI player's logic to play a card
             aiPlayer.PlayCard(_cardDeckLogic.GetTopDiscardCard());
-            
-            Card playedCard = aiPlayer.GetLastPlayedCard();
-            
-            HandleWildCardEffects(playedCard);
 
+            Card playedCard = aiPlayer.GetLastPlayedCard();
+
+            HandleWildCardEffects(playedCard, aiPlayer);
+            HandleSpecialCards(playedCard);
+            
             if (playedCard != null)
             {
                 // Update the current color and value with the played card
                 _cardDeckLogic.UpdateCurrentColorAndValue(playedCard);
             }
-            
         }
         
-        private void HandleWildCardEffects(Card playedCard)
+        private void HandleWildCardEffects(Card playedCard, Player currentPlayer)
         {
             if (playedCard != null && (playedCard.Value == Enums.CardValue.Wild || playedCard.Value == Enums.CardValue.WildDrawFour))
             {
-                if (_players[_currentPlayerIndex] is AiPlayer aiPlayer)
+                if (currentPlayer.Type == PlayerType.Human)
                 {
-                    // Use AI-specific logic to choose the color for Wild and Wild Draw Four cards
-                    Enums.CardColor chosenColor = aiPlayer.ChooseColorForWildCard();
-                    playedCard.Color = chosenColor;
+                    // Ask the human player to choose a new color
+                    Console.Write("Choose a new color (Red, Blue, Yellow, Green): ");
+                    string chosenColor = Console.ReadLine();
+    
+                    Console.WriteLine($"Chosen color: {chosenColor}");
+    
+                    Card selectedCard = new Card { Color = playedCard.Color, Value = playedCard.Value };
+
+                    // Update the current color to the chosen color
+                    _cardDeckLogic.UpdateCurrentColorAndValue(new Card { Color = Enums.ParseEnum<Enums.CardColor>(chosenColor), Value = selectedCard.Value });
                 }
-                else
+                else if (currentPlayer.Type == PlayerType.AI)
                 {
-                    // Assume a default color for non-AI players or handle differently
-                    playedCard.Color = Enums.CardColor.Red;
+                    // AI player chooses the color using existing logic
+                    playedCard.Color = (currentPlayer as AiPlayer)?.ChooseColorForWildCard() ?? Enums.CardColor.Red;
                 }
 
                 if (playedCard.Value == Enums.CardValue.WildDrawFour)
                 {
                     // Draw four cards for the next player
                     Player nextPlayer = _players[(_currentPlayerIndex + 1) % _players.Length];
-                    for (int i = 0; i < 4; i++)
-                    {
-                        Card drawnCard = _cardDeckLogic.DrawCard();
-                        nextPlayer.DrawCard(drawnCard);
-                    }
+                    _cardDeckLogic.DrawFour(nextPlayer);
                 }
             }
         }
+
+
         private void HandleSpecialCards(Card playedCard)
         {
-            switch (playedCard.Value)
+            if (playedCard != null)
             {
-                case Enums.CardValue.Reverse:
-                    // Reverse the direction of play
-                    ReverseDirection();
-                    break;
+                switch (playedCard.Value)
+                {
+                    case Enums.CardValue.Reverse:
+                        // Reverse the direction of play
+                        ReverseDirection();
+                        break;
 
-                case Enums.CardValue.Skip:
-                    // Skip the next player
-                    SkipNextPlayer();
-                    break;
+                    case Enums.CardValue.Skip:
+                        // Skip the next player
+                        SkipNextPlayer();
+                        break;
+                }
             }
         }
 
@@ -192,8 +200,12 @@ namespace UnoGame.GameLogic
 
         private void SkipNextPlayer()
         {
-            // Implement logic to skip the next player
-            _currentPlayerIndex = (_currentPlayerIndex + 2) % _players.Length;
+            Player skippedPlayer = _players[(_currentPlayerIndex + 1) % _players.Length];
+            
+            _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Length;
+
+            Console.WriteLine($"{skippedPlayer.Name} is skipped. Next player: {_players[_currentPlayerIndex].Name}");
+
         }
 
         private void DisplayTopCard()
@@ -211,7 +223,7 @@ namespace UnoGame.GameLogic
                 Console.WriteLine("Your Hand:");
                 for (int i = 0; i < cardsInHand.Count; i++)
                 {
-                    Console.WriteLine($"{i}: {cardsInHand[i]}");
+                    Console.WriteLine($"{i + 1}: {cardsInHand[i]}");
                 }
             }
             else

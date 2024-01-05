@@ -17,7 +17,8 @@ namespace UnoGame.GameLogic
         private WinningLogic winningLogic;
         private SaveGame saveGame;
         private GameStateStorage gameStateStorage;
-        private string gameName; 
+        private string gameName;
+        private ShufflePlayers shufflePlayers;
         
         public string FileName { get; set; }
 
@@ -31,6 +32,7 @@ namespace UnoGame.GameLogic
             saveGame = new SaveGame();
             gameStateStorage = new GameStateStorage();
             this.gameName = gameName;
+            shufflePlayers = new ShufflePlayers();
         }
 
         public void StartGame(Player[] gamePlayers, int initialCardCount, int totalCardsInDeck)
@@ -38,6 +40,8 @@ namespace UnoGame.GameLogic
             Console.WriteLine("Game started!");
 
             players = gamePlayers;
+            
+            ShufflePlayers();
 
             Console.WriteLine("Step 2!");
 
@@ -59,7 +63,7 @@ namespace UnoGame.GameLogic
                     break;
                 }
                 
-                if (CheckForStopCondition())
+                if (CheckForStopCondition(currentPlayerIndex))
                 {
                     Console.WriteLine("Game stopped by user.");
                     break;
@@ -68,6 +72,18 @@ namespace UnoGame.GameLogic
                 UpdateGameState(); // Capture and save the updated game state
             }
             // Console.Out.Flush();
+        }
+        
+        private void ShufflePlayers()
+        {
+            Console.WriteLine("Shuffling players...");
+            players = shufflePlayers.Shuffle(players);
+
+            Console.WriteLine("Shuffled players:");
+            foreach (var player in players)
+            {
+                Console.WriteLine(player.Name);
+            }
         }
 
         private void InitializeCardDeck(int numberOfPlayers, int totalCardsInDeck)
@@ -95,10 +111,16 @@ namespace UnoGame.GameLogic
         {
             foreach (Player player in players)
             {
-                List<Card> initialHand = cardDeckLogic.DealCards(initialCardsNumber);
-                foreach (Card card in initialHand)
+                List<Card> initialHand = cardDeckLogic.DealCards(initialCardsNumber, player.Name);
+
+                if (initialHand != null)
                 {
-                    player.DrawCard(card);
+                    // Omit the general "Dealt X card(s)" message here
+            
+                    foreach (Card card in initialHand)
+                    {
+                        player.DrawCard(card);
+                    }
                 }
             }
         }
@@ -161,6 +183,9 @@ namespace UnoGame.GameLogic
 
                 // Update the deck
                 existingGameState.Deck = new List<Card>(cardDeckLogic.Deck);
+                
+                // Save the shuffled order of players
+                existingGameState.ShuffledPlayers = players;
 
                 // Save the updated game state back to the JSON file
                 gameStateStorage.SaveToJSON(filePath, existingGameState);
@@ -180,8 +205,15 @@ namespace UnoGame.GameLogic
                 // Add other properties based on your game state
             };
         }
-        private bool CheckForStopCondition()
+        private bool CheckForStopCondition(int currentPlayerIndex)
         {
+            
+            if (players[currentPlayerIndex].Type == PlayerType.AI)
+            {
+                // AI player, continue the game
+                return false;
+            }
+            
             Console.WriteLine("Do you want to stop the game?");
             Console.WriteLine("1. Yes");
             Console.WriteLine("2. No");
@@ -190,12 +222,27 @@ namespace UnoGame.GameLogic
 
             if (choice == 1)
             {
-                DisplayExitMenu();
-                return true; // Stop the game
+                Console.WriteLine("Do you want to return to the game?");
+                Console.WriteLine("1. Yes");
+                Console.WriteLine("2. No");
+
+                int returnChoice = GetUserChoice(1, 2);
+
+                if (returnChoice == 1)
+                {
+                    Console.WriteLine("Returning to the game...");
+                    return false; 
+                }
+                else
+                {
+                    DisplayExitMenu();
+                    return true; 
+                }
             }
 
-            return false; // Continue the game
+            return false; 
         }
+
         
         public int GetUserChoice(int min, int max)
         {

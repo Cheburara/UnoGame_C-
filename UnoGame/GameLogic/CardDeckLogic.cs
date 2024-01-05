@@ -36,18 +36,23 @@ namespace UnoGame.GameLogic
             return currentValue;
         }
 
-        public List<Card> DealCards(int numCards)
+        public List<Card> DealCards(int numCards, string playerName)
         {
             if (deck.GetDeck().Count < numCards)
             {
-                Console.WriteLine("Not enough cards in the deck.");
+                Console.WriteLine($"Not enough cards in the deck to deal to {playerName}.");
                 return null;
             }
 
             List<Card> dealtCards = deck.GetDeck().GetRange(0, numCards);
             deck.GetDeck().RemoveRange(0, numCards);
 
-            Console.WriteLine("Dealt " + numCards + " card(s).");
+            Console.WriteLine($"Dealt {numCards} card(s) to {playerName}:");
+            foreach (Card card in dealtCards)
+            {
+                Console.WriteLine(card); // Print each dealt card
+            }
+
             return dealtCards;
         }
 
@@ -86,7 +91,28 @@ namespace UnoGame.GameLogic
             Console.WriteLine("No more cards in the deck.");
             return null; // Handle the case where the deck is empty
         }
+        public void DrawFour(Player nextPlayer)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                Card drawnCard = DrawCard();
 
+                if (drawnCard != null)
+                {
+                    nextPlayer.DrawCard(drawnCard);
+                }
+                else
+                {
+                    Console.Write("Choose a color for the Wild card (Red, Blue, Yellow, Green): ");
+                    string chosenColor = Console.ReadLine();
+
+                    Console.WriteLine($"Chosen color: {chosenColor}");
+                    
+                    UpdateCurrentColorAndValue(new Card { Color = Enums.ParseEnum<Enums.CardColor>(chosenColor), Value = Enums.CardValue.Wild });
+
+                }
+            }
+        }
         public void ShuffleDeck()
         {
             Random random = new Random();
