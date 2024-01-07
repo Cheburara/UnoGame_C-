@@ -1,5 +1,8 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
 using UnoGame.GameMenu;
+using UnoGame.DAL;
+using UnoGame.DAL.Entity;
 
 namespace UnoGame
 {
@@ -8,6 +11,28 @@ namespace UnoGame
         
         static void Main(string[] args)
         {
+            string dbDirectory = "C:\\Users\\arina\\RiderProjects\\UNO\\UnoGame\\DAL";
+
+            // Combine the directory and file name to create a complete path for the database file
+            string dbFilePath = Path.Combine(dbDirectory, "UnoGameDatabase.db");
+
+            // Build the connection string
+            string connectionString = $"Data Source={dbFilePath};Cache=Shared";
+
+            // Configure DbContext options
+            var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlite(connectionString)
+                .EnableDetailedErrors()
+                .EnableSensitiveDataLogging()
+                .Options;
+
+            // Create DbContext and apply migrations
+            using var db = new AppDbContext(contextOptions);
+            db.Database.Migrate();
+
+            // Your GameRepositoryEF instance
+            var gameRepository = new GameRepositoryEF(db);
+
             MainMenu mainMenu = new MainMenu();
 
             while (true)

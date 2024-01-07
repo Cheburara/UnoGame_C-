@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text.Json;
 using UnoGame.GameObject;
+using UnoGame.DAL;
 
     namespace UnoGame.Storage
     {
@@ -51,7 +52,12 @@ using UnoGame.GameObject;
                 try
                 {
                     string jsonString = File.ReadAllText(EnsureJsonExtension(fileName));
-                    return JsonSerializer.Deserialize<GameState>(jsonString, GetJsonSerializerOptions());
+                    GameState gameState = JsonSerializer.Deserialize<GameState>(jsonString, GetJsonSerializerOptions());
+
+                    // If PlayersHands is null, initialize it as an empty dictionary
+                    gameState.PlayersHands ??= new Dictionary<string, List<Card>>();
+
+                    return gameState;
                 }
                 catch (Exception ex)
                 {
@@ -72,13 +78,27 @@ using UnoGame.GameObject;
             {
                 return fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase) ? fileName : $"{fileName}.json";
             }
-
-            public void SaveToDatabase(GameState gameState)
+            public void SaveToDatabase(GameState gameState,  AppDbContext dbContext)
             {
-                // Implement logic to save the game state to the database
-                // You might use a database connection, ORM, or any other data access mechanism
-                // For simplicity, I'm leaving this as a placeholder
-                Console.WriteLine("Game state saved to the database.");
+                try
+                {  
+                    var gameRepository = new GameRepositoryEF(dbContext);
+                    gameRepository.Save(gameState);
+
+                    Console.WriteLine("Game state saved to the database.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error saving the game state to the database: " + ex.Message);
+    
+                    if (ex.InnerException != null)
+                    {
+                        Console.WriteLine("Inner exception: " + ex.InnerException.Message);
+                    }
+                }
+
             }
+
+            
         }
     }

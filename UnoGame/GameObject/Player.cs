@@ -1,11 +1,23 @@
 using UnoGame.GameLogic;
-
+using UnoGame.DAL.Entity;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace UnoGame.GameObject
 {
     public class Player
     {
+        [Key]
+        public int PlayerId { get; set; }
+        
+        [Required] 
         public string Name { get; set; }
+        
+        public Guid GameEntityId { get; set; }
+        [ForeignKey("GameEntityId")]
+        public GameEntity GameEntity { get; set; }
+        
+        public List<PlayerHandSummaryEntity> HandSummaries { get; set; }
         public PlayerType Type { get; set; }
         public PlayerHand Hand { get; set; }
 
@@ -17,43 +29,52 @@ namespace UnoGame.GameObject
         }
 
         public bool IsTurnSkipped { get; set; }
-
-        // Method to skip the player's turn
         public void SkipTurn()
         {
             IsTurnSkipped = true;
-        }
-
-        // Method to reset the turn skip status
-        public void ResetTurnSkip()
-        {
-            IsTurnSkipped = false;
         }
 
         public virtual void PlayCard(Card card)
         {
             Hand.PlayCard(card);
         }
-
         public void DrawCard(Card card)
         {
             Hand.DrawCard(card);
         }
-
         public List<Card> GetCardsInHand()
         {
             return new List<Card>(Hand.GetCards());
         }
+        
     }
 
     public class PlayerHand
     {
+        [Key]
+        public int PlayerHandId { get; set; }
+
+        // Foreign key to associate with a player
+        public int PlayerId { get; set; }
+
+        [ForeignKey("PlayerId")]
+        public Player Player { get; set; }
+        
         private List<Card> cards;
 
         public PlayerHand()
         {
             cards = new List<Card>();
         }
+        public void AddCards(List<Card> cards)
+        {
+            this.cards.AddRange(cards);
+        }
+        public void Clear()
+        {
+            cards.Clear();
+        }
+
 
         public void PlayCard(Card card)
         {
@@ -130,11 +151,10 @@ namespace UnoGame.GameObject
             else
             {
                 // Draw a card only if no playable card is found
-                DrawCardFromDeck();
+                DrawCardFromDeck(this);
+
             }
         }
-
-        
         public Card GetLastPlayedCard()
         {
             return _playedCard;
@@ -193,9 +213,13 @@ namespace UnoGame.GameObject
                     return matchingCard;
                 }
             }
+            if (!playableCardsFound)
+            { 
+                DrawCardFromDeck(this);
+            }
 
             HandleNoSpecificCardAvailable();
-            DrawCardFromDeck();
+
             return null;
         }
 
@@ -209,10 +233,10 @@ namespace UnoGame.GameObject
             else
             {
                 Console.WriteLine($"{Name} cannot play a specific card. Drawing a card from the deck...");
-                DrawCardFromDeck();
+                DrawCardFromDeck(this);
+
             }
         }
-
         public Enums.CardColor ChooseColorForWildCard()
         {
             List<Card> cardsInHand = GetCardsInHand();
@@ -280,7 +304,7 @@ namespace UnoGame.GameObject
             return null;
         }
 
-        private void DrawCardFromDeck()
+        private void DrawCardFromDeck(Player currentPlayer)
         {
             List<Card> playedCards = new List<Card>();
             int drawAttempts = 0;
@@ -288,7 +312,7 @@ namespace UnoGame.GameObject
 
             while (drawAttempts < maxDrawAttempts)
             {
-                Card drawnCard = _cardDeckLogic.DrawCard();
+                Card drawnCard = _cardDeckLogic.DrawCard(currentPlayer);
 
                 if (drawnCard == null)
                 {
@@ -319,7 +343,8 @@ namespace UnoGame.GameObject
             if (drawAttempts == maxDrawAttempts)
             {
                 Console.WriteLine($"AI {Name} is drawing another card...");
-                DrawCardFromDeck();
+                DrawCardFromDeck(this);
+
             }
         }
 

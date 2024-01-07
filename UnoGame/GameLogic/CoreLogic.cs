@@ -1,10 +1,8 @@
 using UnoGame.GameObject;
-using UnoGame.GameLogic;
 using UnoGame.GameMenu;
 using UnoGame.Rules;
 using UnoGame.Storage;
-using System;
-using System.Collections.Generic;
+
 
 namespace UnoGame.GameLogic
 {
@@ -14,17 +12,21 @@ namespace UnoGame.GameLogic
         private CardDeckLogic cardDeckLogic;
         private Player[] players;
         private EndMenu endMenu;
-        private WinningLogic winningLogic;
         private SaveGame saveGame;
+        private bool isGameStateLoaded = false;
+        private GameState existingGameState;
         private GameStateStorage gameStateStorage;
         private string gameName;
         private ShufflePlayers shufflePlayers;
+        
         
         public string FileName { get; set; }
 
         public CoreLogic(CardDeckLogic deckLogic, RulesBase gameRules, Player[] gamePlayers, EndMenu endMenu, string gameName)
         {
-            unoGameLogic = new UnoGameLogic(deckLogic, gamePlayers, new WinningLogic());
+            {
+                unoGameLogic = new UnoGameLogic(deckLogic, gamePlayers, new WinningLogic());
+            }
             unoGameLogic.GameEnded += HandleGameEnded;
             players = gamePlayers;
             cardDeckLogic = deckLogic;
@@ -49,6 +51,17 @@ namespace UnoGame.GameLogic
 
             DealInitialHands(players.Length, initialCardCount);
 
+            ContinueGame();
+
+        }
+        public void ContinueGame()
+        {
+            Console.WriteLine("Step 3!");
+            
+            Console.WriteLine("Continuing the game...");
+            
+            LoadGameState(); 
+
             int currentPlayerIndex = 0;
 
             while (true)
@@ -59,10 +72,9 @@ namespace UnoGame.GameLogic
                 if (CheckForGameEnd())
                 {
                     Console.WriteLine("Game over!");
-
                     break;
                 }
-                
+
                 if (CheckForStopCondition(currentPlayerIndex))
                 {
                     Console.WriteLine("Game stopped by user.");
@@ -71,9 +83,7 @@ namespace UnoGame.GameLogic
 
                 UpdateGameState(); // Capture and save the updated game state
             }
-            // Console.Out.Flush();
         }
-        
         private void ShufflePlayers()
         {
             Console.WriteLine("Shuffling players...");
@@ -102,9 +112,7 @@ namespace UnoGame.GameLogic
 
             Console.WriteLine($"The amount of cards in deck: {totalCardsInDeck}");
             Console.WriteLine($"First card: {firstCard}");
-
-            // Capture and save the initial game state
-            UpdateGameState();
+            
         }
 
         private void DealInitialHands(int numberOfPlayers, int initialCardsNumber)
@@ -115,7 +123,6 @@ namespace UnoGame.GameLogic
 
                 if (initialHand != null)
                 {
-                    // Omit the general "Dealt X card(s)" message here
             
                     foreach (Card card in initialHand)
                     {
@@ -157,23 +164,56 @@ namespace UnoGame.GameLogic
 
             return false; // Continue the game
         }
+        
+        private void LoadGameState()
+        {
+            string directoryPath = @"C:\Users\arina\RiderProjects\UNO\UnoGame\JSON";
 
+            // Load the existing game state from the JSON file
+            string filePath = Path.Combine(directoryPath, gameName);
+            existingGameState = gameStateStorage.LoadFromJSON(filePath);
+
+            if (existingGameState != null)
+            {
+
+                // Set the total cards in deck
+                cardDeckLogic.Deck.Clear(); // Clear the current deck
+                cardDeckLogic.Deck.AddRange(existingGameState.Deck);
+
+                // Set the top discard card
+                cardDeckLogic.GetTopDiscardCard();
+                // Set the players' hands
+                foreach (var player in players)
+                {
+                    if (existingGameState.PlayersHands.TryGetValue(player.Name, out List<Card> handCards))
+                    {
+                        player.Hand.Clear(); // Clear the current hand
+                        player.Hand.AddCards(handCards);
+                    }
+                }
+
+                // Set the flag to indicate that the game state is loaded
+                isGameStateLoaded = true;
+            }
+            else
+            {
+                Console.WriteLine("Failed to load the existing game state. Loading aborted.");
+            }
+        }
         private void UpdateGameState()
         {
             string directoryPath = @"C:\Users\arina\RiderProjects\UNO\UnoGame\JSON";
 
             // Load the existing game state from the JSON file
             string filePath = Path.Combine(directoryPath, gameName);
-            GameState existingGameState = gameStateStorage.LoadFromJSON(filePath);
+            existingGameState = gameStateStorage.LoadFromJSON(filePath);
 
             if (existingGameState != null)
             {
                 // Update the relevant values in the existing game state
                 existingGameState.TotalCardsInDeck = cardDeckLogic.Deck.Count;
-
-                // Update the top discard card
                 existingGameState.TopCard = cardDeckLogic.GetTopDiscardCard();
-
+        
                 // Populate the cards in players' hands
                 existingGameState.PlayersHands = new Dictionary<string, List<Card>>();
                 foreach (var player in players)
@@ -183,12 +223,12 @@ namespace UnoGame.GameLogic
 
                 // Update the deck
                 existingGameState.Deck = new List<Card>(cardDeckLogic.Deck);
-                
-                // Save the shuffled order of players
-                existingGameState.ShuffledPlayers = players;
 
                 // Save the updated game state back to the JSON file
                 gameStateStorage.SaveToJSON(filePath, existingGameState);
+
+                // Set the flag to indicate that the game state is loaded
+                isGameStateLoaded = true;
             }
             else
             {

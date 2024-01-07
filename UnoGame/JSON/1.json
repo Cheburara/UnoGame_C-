@@ -10,110 +10,41 @@
   },
   "CustomRules": null,
   "TurnOrder": 0,
-  "TotalCardsInDeck": 93,
+  "TotalCardsInDeck": 90,
   "InitialCardCount": 0,
   "NumberOfPlayers": 2,
   "Players": [
     {
+      "PlayerId": 0,
       "Name": "Arina",
+      "GameEntityId": "00000000-0000-0000-0000-000000000000",
+      "GameEntity": null,
+      "HandSummaries": null,
       "Type": 0,
-      "Hand": {},
+      "Hand": {
+        "PlayerHandId": 0,
+        "PlayerId": 0,
+        "Player": null
+      },
       "IsTurnSkipped": false
     },
     {
+      "PlayerId": 0,
       "Name": "Vera",
-      "Type": 1,
-      "Hand": {},
-      "IsTurnSkipped": false
-    }
-  ],
-  "ShuffledPlayers": [
-    {
-      "Name": "Vera",
-      "Type": 1,
-      "Hand": {},
-      "IsTurnSkipped": false
-    },
-    {
-      "Name": "Arina",
+      "GameEntityId": "00000000-0000-0000-0000-000000000000",
+      "GameEntity": null,
+      "HandSummaries": null,
       "Type": 0,
-      "Hand": {},
+      "Hand": {
+        "PlayerHandId": 0,
+        "PlayerId": 0,
+        "Player": null
+      },
       "IsTurnSkipped": false
     }
   ],
+  "ShuffledPlayers": null,
   "Deck": [
-    {
-      "Color": 2,
-      "Value": 1,
-      "Score": 1,
-      "DisplayValue": "Yellow One"
-    },
-    {
-      "Color": 1,
-      "Value": 6,
-      "Score": 6,
-      "DisplayValue": "Blue Six"
-    },
-    {
-      "Color": 0,
-      "Value": 6,
-      "Score": 6,
-      "DisplayValue": "Red Six"
-    },
-    {
-      "Color": 3,
-      "Value": 7,
-      "Score": 7,
-      "DisplayValue": "Green Seven"
-    },
-    {
-      "Color": 0,
-      "Value": 11,
-      "Score": 20,
-      "DisplayValue": "Red Skip"
-    },
-    {
-      "Color": 1,
-      "Value": 10,
-      "Score": 20,
-      "DisplayValue": "Blue Reverse"
-    },
-    {
-      "Color": 3,
-      "Value": 10,
-      "Score": 20,
-      "DisplayValue": "Green Reverse"
-    },
-    {
-      "Color": 2,
-      "Value": 0,
-      "Score": 0,
-      "DisplayValue": "Yellow Zero"
-    },
-    {
-      "Color": 3,
-      "Value": 1,
-      "Score": 1,
-      "DisplayValue": "Green One"
-    },
-    {
-      "Color": 1,
-      "Value": 5,
-      "Score": 5,
-      "DisplayValue": "Blue Five"
-    },
-    {
-      "Color": 1,
-      "Value": 3,
-      "Score": 3,
-      "DisplayValue": "Blue Three"
-    },
-    {
-      "Color": 1,
-      "Value": 8,
-      "Score": 8,
-      "DisplayValue": "Blue Eight"
-    },
     {
       "Color": 0,
       "Value": 9,
@@ -127,142 +58,34 @@
       "DisplayValue": "Red Reverse"
     },
     {
-      "Color": 4,
-      "Value": 13,
-      "Score": 50,
-      "DisplayValue": "Black WildDrawFour"
-    },
-    {
-      "Color": 3,
-      "Value": 5,
-      "Score": 5,
-      "DisplayValue": "Green Five"
-    },
-    {
-      "Color": 4,
-      "Value": 12,
-      "Score": 50,
-      "DisplayValue": "Wild"
+      "Color": 0,
+      "Value": 10,
+      "Score": 20,
+      "DisplayValue": "Red Reverse"
     },
     {
       "Color": 0,
-      "Value": 2,
-      "Score": 2,
-      "DisplayValue": "Red Two"
-    },
-    {
-      "Color": 2,
-      "Value": 8,
-      "Score": 8,
-      "DisplayValue": "Yellow Eight"
+      "Value": 11,
+      "Score": 20,
+      "DisplayValue": "Red Skip"
     },
     {
       "Color": 0,
-      "Value": 4,
-      "Score": 4,
-      "DisplayValue": "Red Four"
+      "Value": 11,
+      "Score": 20,
+      "DisplayValue": "Red Skip"
     },
     {
       "Color": 0,
-      "Value": 7,
-      "Score": 7,
-      "DisplayValue": "Red Seven"
-    },
-    {
-      "Color": 1,
-      "Value": 8,
-      "Score": 8,
-      "DisplayValue": "Blue Eight"
-    },
-    {
-      "Color": 2,
       "Value": 10,
       "Score": 20,
-      "DisplayValue": "Yellow Reverse"
+      "DisplayValue": "Red Reverse"
     },
     {
-      "Color": 2,
+      "Color": 0,
       "Value": 11,
       "Score": 20,
-      "DisplayValue": "Yellow Skip"
-    },
-    {
-      "Color": 2,
-      "Value": 4,
-      "Score": 4,
-      "DisplayValue": "Yellow Four"
-    },
-    {
-      "Color": 3,
-      "Value": 10,
-      "Score": 20,
-      "DisplayValue": "Green Reverse"
-    },
-    {
-      "Color": 1,
-      "Value": 11,
-      "Score": 20,
-      "DisplayValue": "Blue Skip"
-    },
-    {
-      "Color": 1,
-      "Value": 11,
-      "Score": 20,
-      "DisplayValue": "Blue Skip"
-    },
-    {
-      "Color": 2,
-      "Value": 10,
-      "Score": 20,
-      "DisplayValue": "Yellow Reverse"
-    },
-    {
-      "Color": 1,
-      "Value": 10,
-      "Score": 20,
-      "DisplayValue": "Blue Reverse"
-    },
-    {
-      "Color": 3,
-      "Value": 4,
-      "Score": 4,
-      "DisplayValue": "Green Four"
-    },
-    {
-      "Color": 1,
-      "Value": 2,
-      "Score": 2,
-      "DisplayValue": "Blue Two"
-    },
-    {
-      "Color": 2,
-      "Value": 6,
-      "Score": 6,
-      "DisplayValue": "Yellow Six"
-    },
-    {
-      "Color": 3,
-      "Value": 2,
-      "Score": 2,
-      "DisplayValue": "Green Two"
-    },
-    {
-      "Color": 4,
-      "Value": 13,
-      "Score": 50,
-      "DisplayValue": "Black WildDrawFour"
-    },
-    {
-      "Color": 2,
-      "Value": 9,
-      "Score": 9,
-      "DisplayValue": "Yellow Nine"
-    },
-    {
-      "Color": 2,
-      "Value": 3,
-      "Score": 3,
-      "DisplayValue": "Yellow Three"
+      "DisplayValue": "Red Skip"
     },
     {
       "Color": 1,
@@ -272,15 +95,15 @@
     },
     {
       "Color": 1,
-      "Value": 10,
-      "Score": 20,
-      "DisplayValue": "Blue Reverse"
+      "Value": 1,
+      "Score": 1,
+      "DisplayValue": "Blue One"
     },
     {
       "Color": 1,
-      "Value": 4,
-      "Score": 4,
-      "DisplayValue": "Blue Four"
+      "Value": 1,
+      "Score": 1,
+      "DisplayValue": "Blue One"
     },
     {
       "Color": 1,
@@ -289,34 +112,22 @@
       "DisplayValue": "Blue Two"
     },
     {
-      "Color": 3,
-      "Value": 9,
-      "Score": 9,
-      "DisplayValue": "Green Nine"
+      "Color": 1,
+      "Value": 2,
+      "Score": 2,
+      "DisplayValue": "Blue Two"
     },
     {
-      "Color": 3,
-      "Value": 8,
-      "Score": 8,
-      "DisplayValue": "Green Eight"
+      "Color": 1,
+      "Value": 3,
+      "Score": 3,
+      "DisplayValue": "Blue Three"
     },
     {
-      "Color": 3,
-      "Value": 5,
-      "Score": 5,
-      "DisplayValue": "Green Five"
-    },
-    {
-      "Color": 2,
-      "Value": 5,
-      "Score": 5,
-      "DisplayValue": "Yellow Five"
-    },
-    {
-      "Color": 0,
-      "Value": 8,
-      "Score": 8,
-      "DisplayValue": "Red Eight"
+      "Color": 1,
+      "Value": 3,
+      "Score": 3,
+      "DisplayValue": "Blue Three"
     },
     {
       "Color": 1,
@@ -325,34 +136,124 @@
       "DisplayValue": "Blue Four"
     },
     {
+      "Color": 1,
+      "Value": 4,
+      "Score": 4,
+      "DisplayValue": "Blue Four"
+    },
+    {
+      "Color": 1,
+      "Value": 5,
+      "Score": 5,
+      "DisplayValue": "Blue Five"
+    },
+    {
+      "Color": 1,
+      "Value": 5,
+      "Score": 5,
+      "DisplayValue": "Blue Five"
+    },
+    {
+      "Color": 1,
+      "Value": 6,
+      "Score": 6,
+      "DisplayValue": "Blue Six"
+    },
+    {
+      "Color": 1,
+      "Value": 6,
+      "Score": 6,
+      "DisplayValue": "Blue Six"
+    },
+    {
+      "Color": 1,
+      "Value": 7,
+      "Score": 7,
+      "DisplayValue": "Blue Seven"
+    },
+    {
+      "Color": 1,
+      "Value": 7,
+      "Score": 7,
+      "DisplayValue": "Blue Seven"
+    },
+    {
+      "Color": 1,
+      "Value": 8,
+      "Score": 8,
+      "DisplayValue": "Blue Eight"
+    },
+    {
+      "Color": 1,
+      "Value": 8,
+      "Score": 8,
+      "DisplayValue": "Blue Eight"
+    },
+    {
+      "Color": 1,
+      "Value": 9,
+      "Score": 9,
+      "DisplayValue": "Blue Nine"
+    },
+    {
+      "Color": 1,
+      "Value": 9,
+      "Score": 9,
+      "DisplayValue": "Blue Nine"
+    },
+    {
+      "Color": 1,
+      "Value": 10,
+      "Score": 20,
+      "DisplayValue": "Blue Reverse"
+    },
+    {
+      "Color": 1,
+      "Value": 10,
+      "Score": 20,
+      "DisplayValue": "Blue Reverse"
+    },
+    {
+      "Color": 1,
+      "Value": 11,
+      "Score": 20,
+      "DisplayValue": "Blue Skip"
+    },
+    {
+      "Color": 1,
+      "Value": 11,
+      "Score": 20,
+      "DisplayValue": "Blue Skip"
+    },
+    {
+      "Color": 1,
+      "Value": 10,
+      "Score": 20,
+      "DisplayValue": "Blue Reverse"
+    },
+    {
+      "Color": 1,
+      "Value": 11,
+      "Score": 20,
+      "DisplayValue": "Blue Skip"
+    },
+    {
       "Color": 2,
-      "Value": 8,
-      "Score": 8,
-      "DisplayValue": "Yellow Eight"
-    },
-    {
-      "Color": 0,
-      "Value": 8,
-      "Score": 8,
-      "DisplayValue": "Red Eight"
-    },
-    {
-      "Color": 4,
-      "Value": 13,
-      "Score": 50,
-      "DisplayValue": "Black WildDrawFour"
-    },
-    {
-      "Color": 4,
-      "Value": 12,
-      "Score": 50,
-      "DisplayValue": "Wild"
-    },
-    {
-      "Color": 0,
       "Value": 0,
       "Score": 0,
-      "DisplayValue": "Red Zero"
+      "DisplayValue": "Yellow Zero"
+    },
+    {
+      "Color": 2,
+      "Value": 1,
+      "Score": 1,
+      "DisplayValue": "Yellow One"
+    },
+    {
+      "Color": 2,
+      "Value": 1,
+      "Score": 1,
+      "DisplayValue": "Yellow One"
     },
     {
       "Color": 2,
@@ -361,40 +262,106 @@
       "DisplayValue": "Yellow Two"
     },
     {
-      "Color": 3,
+      "Color": 2,
       "Value": 2,
       "Score": 2,
-      "DisplayValue": "Green Two"
+      "DisplayValue": "Yellow Two"
     },
     {
-      "Color": 1,
-      "Value": 9,
-      "Score": 9,
-      "DisplayValue": "Blue Nine"
-    },
-    {
-      "Color": 0,
+      "Color": 2,
       "Value": 3,
       "Score": 3,
-      "DisplayValue": "Red Three"
+      "DisplayValue": "Yellow Three"
     },
     {
-      "Color": 3,
-      "Value": 10,
-      "Score": 20,
-      "DisplayValue": "Green Reverse"
+      "Color": 2,
+      "Value": 3,
+      "Score": 3,
+      "DisplayValue": "Yellow Three"
     },
     {
-      "Color": 0,
-      "Value": 11,
-      "Score": 20,
-      "DisplayValue": "Red Skip"
+      "Color": 2,
+      "Value": 4,
+      "Score": 4,
+      "DisplayValue": "Yellow Four"
     },
     {
-      "Color": 0,
+      "Color": 2,
+      "Value": 4,
+      "Score": 4,
+      "DisplayValue": "Yellow Four"
+    },
+    {
+      "Color": 2,
       "Value": 5,
       "Score": 5,
-      "DisplayValue": "Red Five"
+      "DisplayValue": "Yellow Five"
+    },
+    {
+      "Color": 2,
+      "Value": 5,
+      "Score": 5,
+      "DisplayValue": "Yellow Five"
+    },
+    {
+      "Color": 2,
+      "Value": 6,
+      "Score": 6,
+      "DisplayValue": "Yellow Six"
+    },
+    {
+      "Color": 2,
+      "Value": 6,
+      "Score": 6,
+      "DisplayValue": "Yellow Six"
+    },
+    {
+      "Color": 2,
+      "Value": 7,
+      "Score": 7,
+      "DisplayValue": "Yellow Seven"
+    },
+    {
+      "Color": 2,
+      "Value": 7,
+      "Score": 7,
+      "DisplayValue": "Yellow Seven"
+    },
+    {
+      "Color": 2,
+      "Value": 8,
+      "Score": 8,
+      "DisplayValue": "Yellow Eight"
+    },
+    {
+      "Color": 2,
+      "Value": 8,
+      "Score": 8,
+      "DisplayValue": "Yellow Eight"
+    },
+    {
+      "Color": 2,
+      "Value": 9,
+      "Score": 9,
+      "DisplayValue": "Yellow Nine"
+    },
+    {
+      "Color": 2,
+      "Value": 9,
+      "Score": 9,
+      "DisplayValue": "Yellow Nine"
+    },
+    {
+      "Color": 2,
+      "Value": 10,
+      "Score": 20,
+      "DisplayValue": "Yellow Reverse"
+    },
+    {
+      "Color": 2,
+      "Value": 10,
+      "Score": 20,
+      "DisplayValue": "Yellow Reverse"
     },
     {
       "Color": 2,
@@ -403,16 +370,22 @@
       "DisplayValue": "Yellow Skip"
     },
     {
-      "Color": 1,
-      "Value": 9,
-      "Score": 9,
-      "DisplayValue": "Blue Nine"
+      "Color": 2,
+      "Value": 11,
+      "Score": 20,
+      "DisplayValue": "Yellow Skip"
     },
     {
-      "Color": 3,
-      "Value": 3,
-      "Score": 3,
-      "DisplayValue": "Green Three"
+      "Color": 2,
+      "Value": 10,
+      "Score": 20,
+      "DisplayValue": "Yellow Reverse"
+    },
+    {
+      "Color": 2,
+      "Value": 11,
+      "Score": 20,
+      "DisplayValue": "Yellow Skip"
     },
     {
       "Color": 3,
@@ -422,57 +395,27 @@
     },
     {
       "Color": 3,
-      "Value": 8,
-      "Score": 8,
-      "DisplayValue": "Green Eight"
-    },
-    {
-      "Color": 2,
-      "Value": 3,
-      "Score": 3,
-      "DisplayValue": "Yellow Three"
-    },
-    {
-      "Color": 1,
-      "Value": 7,
-      "Score": 7,
-      "DisplayValue": "Blue Seven"
-    },
-    {
-      "Color": 2,
-      "Value": 7,
-      "Score": 7,
-      "DisplayValue": "Yellow Seven"
-    },
-    {
-      "Color": 2,
-      "Value": 9,
-      "Score": 9,
-      "DisplayValue": "Yellow Nine"
-    },
-    {
-      "Color": 0,
-      "Value": 10,
-      "Score": 20,
-      "DisplayValue": "Red Reverse"
-    },
-    {
-      "Color": 0,
       "Value": 1,
       "Score": 1,
-      "DisplayValue": "Red One"
+      "DisplayValue": "Green One"
     },
     {
       "Color": 3,
-      "Value": 11,
-      "Score": 20,
-      "DisplayValue": "Green Skip"
+      "Value": 1,
+      "Score": 1,
+      "DisplayValue": "Green One"
     },
     {
-      "Color": 2,
+      "Color": 3,
       "Value": 2,
       "Score": 2,
-      "DisplayValue": "Yellow Two"
+      "DisplayValue": "Green Two"
+    },
+    {
+      "Color": 3,
+      "Value": 2,
+      "Score": 2,
+      "DisplayValue": "Green Two"
     },
     {
       "Color": 3,
@@ -481,106 +424,34 @@
       "DisplayValue": "Green Three"
     },
     {
-      "Color": 0,
-      "Value": 6,
-      "Score": 6,
-      "DisplayValue": "Red Six"
-    },
-    {
-      "Color": 1,
-      "Value": 7,
-      "Score": 7,
-      "DisplayValue": "Blue Seven"
-    },
-    {
       "Color": 3,
-      "Value": 11,
-      "Score": 20,
-      "DisplayValue": "Green Skip"
-    },
-    {
-      "Color": 0,
-      "Value": 5,
-      "Score": 5,
-      "DisplayValue": "Red Five"
-    },
-    {
-      "Color": 1,
-      "Value": 1,
-      "Score": 1,
-      "DisplayValue": "Blue One"
-    },
-    {
-      "Color": 2,
-      "Value": 5,
-      "Score": 5,
-      "DisplayValue": "Yellow Five"
-    },
-    {
-      "Color": 0,
-      "Value": 7,
-      "Score": 7,
-      "DisplayValue": "Red Seven"
-    },
-    {
-      "Color": 0,
       "Value": 3,
       "Score": 3,
-      "DisplayValue": "Red Three"
+      "DisplayValue": "Green Three"
     },
     {
       "Color": 3,
-      "Value": 7,
-      "Score": 7,
-      "DisplayValue": "Green Seven"
-    },
-    {
-      "Color": 1,
-      "Value": 1,
-      "Score": 1,
-      "DisplayValue": "Blue One"
-    },
-    {
-      "Color": 0,
-      "Value": 2,
-      "Score": 2,
-      "DisplayValue": "Red Two"
-    },
-    {
-      "Color": 2,
-      "Value": 10,
-      "Score": 20,
-      "DisplayValue": "Yellow Reverse"
-    },
-    {
-      "Color": 1,
-      "Value": 3,
-      "Score": 3,
-      "DisplayValue": "Blue Three"
-    },
-    {
-      "Color": 4,
-      "Value": 12,
-      "Score": 50,
-      "DisplayValue": "Wild"
-    },
-    {
-      "Color": 2,
-      "Value": 7,
-      "Score": 7,
-      "DisplayValue": "Yellow Seven"
+      "Value": 4,
+      "Score": 4,
+      "DisplayValue": "Green Four"
     },
     {
       "Color": 3,
-      "Value": 11,
-      "Score": 20,
-      "DisplayValue": "Green Skip"
+      "Value": 4,
+      "Score": 4,
+      "DisplayValue": "Green Four"
     },
     {
-      "Color": 0,
-      "Value": 9,
-      "Score": 9,
-      "DisplayValue": "Red Nine"
+      "Color": 3,
+      "Value": 5,
+      "Score": 5,
+      "DisplayValue": "Green Five"
+    },
+    {
+      "Color": 3,
+      "Value": 5,
+      "Score": 5,
+      "DisplayValue": "Green Five"
     },
     {
       "Color": 3,
@@ -589,31 +460,145 @@
       "DisplayValue": "Green Six"
     },
     {
-      "Color": 1,
-      "Value": 11,
-      "Score": 20,
-      "DisplayValue": "Blue Skip"
+      "Color": 3,
+      "Value": 6,
+      "Score": 6,
+      "DisplayValue": "Green Six"
+    },
+    {
+      "Color": 3,
+      "Value": 7,
+      "Score": 7,
+      "DisplayValue": "Green Seven"
+    },
+    {
+      "Color": 3,
+      "Value": 7,
+      "Score": 7,
+      "DisplayValue": "Green Seven"
+    },
+    {
+      "Color": 3,
+      "Value": 8,
+      "Score": 8,
+      "DisplayValue": "Green Eight"
+    },
+    {
+      "Color": 3,
+      "Value": 8,
+      "Score": 8,
+      "DisplayValue": "Green Eight"
     },
     {
       "Color": 3,
       "Value": 9,
       "Score": 9,
       "DisplayValue": "Green Nine"
+    },
+    {
+      "Color": 3,
+      "Value": 9,
+      "Score": 9,
+      "DisplayValue": "Green Nine"
+    },
+    {
+      "Color": 3,
+      "Value": 10,
+      "Score": 20,
+      "DisplayValue": "Green Reverse"
+    },
+    {
+      "Color": 3,
+      "Value": 10,
+      "Score": 20,
+      "DisplayValue": "Green Reverse"
+    },
+    {
+      "Color": 3,
+      "Value": 11,
+      "Score": 20,
+      "DisplayValue": "Green Skip"
+    },
+    {
+      "Color": 3,
+      "Value": 11,
+      "Score": 20,
+      "DisplayValue": "Green Skip"
+    },
+    {
+      "Color": 3,
+      "Value": 10,
+      "Score": 20,
+      "DisplayValue": "Green Reverse"
+    },
+    {
+      "Color": 3,
+      "Value": 11,
+      "Score": 20,
+      "DisplayValue": "Green Skip"
+    },
+    {
+      "Color": 4,
+      "Value": 12,
+      "Score": 50,
+      "DisplayValue": "Wild"
+    },
+    {
+      "Color": 4,
+      "Value": 12,
+      "Score": 50,
+      "DisplayValue": "Wild"
+    },
+    {
+      "Color": 4,
+      "Value": 12,
+      "Score": 50,
+      "DisplayValue": "Wild"
+    },
+    {
+      "Color": 4,
+      "Value": 12,
+      "Score": 50,
+      "DisplayValue": "Wild"
+    },
+    {
+      "Color": 4,
+      "Value": 13,
+      "Score": 50,
+      "DisplayValue": "Black WildDrawFour"
+    },
+    {
+      "Color": 4,
+      "Value": 13,
+      "Score": 50,
+      "DisplayValue": "Black WildDrawFour"
+    },
+    {
+      "Color": 4,
+      "Value": 13,
+      "Score": 50,
+      "DisplayValue": "Black WildDrawFour"
+    },
+    {
+      "Color": 4,
+      "Value": 13,
+      "Score": 50,
+      "DisplayValue": "Black WildDrawFour"
     }
   ],
   "TopCard": {
-    "Color": 3,
-    "Value": 6,
-    "Score": 6,
-    "DisplayValue": "Green Six"
+    "Color": 2,
+    "Value": 9,
+    "Score": 9,
+    "DisplayValue": "Yellow Nine"
   },
   "PlayersHands": {
     "Vera": [
       {
-        "Color": 3,
-        "Value": 4,
-        "Score": 4,
-        "DisplayValue": "Green Four"
+        "Color": 0,
+        "Value": 6,
+        "Score": 6,
+        "DisplayValue": "Red Six"
       },
       {
         "Color": 2,
@@ -623,53 +608,9 @@
       },
       {
         "Color": 0,
-        "Value": 11,
-        "Score": 20,
-        "DisplayValue": "Red Skip"
-      },
-      {
-        "Color": 0,
-        "Value": 4,
-        "Score": 4,
-        "DisplayValue": "Red Four"
-      },
-      {
-        "Color": 2,
-        "Value": 6,
-        "Score": 6,
-        "DisplayValue": "Yellow Six"
-      },
-      {
-        "Color": 2,
-        "Value": 1,
-        "Score": 1,
-        "DisplayValue": "Yellow One"
-      },
-      {
-        "Color": 2,
-        "Value": 11,
-        "Score": 20,
-        "DisplayValue": "Yellow Skip"
-      }
-    ],
-    "Arina": [
-      {
-        "Color": 0,
-        "Value": 10,
-        "Score": 20,
-        "DisplayValue": "Red Reverse"
-      },
-      {
-        "Color": 4,
-        "Value": 12,
-        "Score": 50,
-        "DisplayValue": "Wild"
-      },
-      {
-        "Color": 3,
-        "Value": 1,
-        "Score": 1,
-        "DisplayValue": "Green One"
+        "Value": 9,
+        "Score": 9,
+        "DisplayValue": "Red Nine"
       },
       {
         "Color": 4,
@@ -685,16 +626,68 @@
       },
       {
         "Color": 0,
-        "Value": 1,
-        "Score": 1,
-        "DisplayValue": "Red One"
+        "Value": 5,
+        "Score": 5,
+        "DisplayValue": "Red Five"
       },
       {
         "Color": 1,
-        "Value": 5,
-        "Score": 5,
-        "DisplayValue": "Blue Five"
+        "Value": 9,
+        "Score": 9,
+        "DisplayValue": "Blue Nine"
+      },
+      {
+        "Color": 0,
+        "Value": 9,
+        "Score": 9,
+        "DisplayValue": "Red Nine"
+      }
+    ],
+    "Arina": [
+      {
+        "Color": 3,
+        "Value": 10,
+        "Score": 20,
+        "DisplayValue": "Green Reverse"
+      },
+      {
+        "Color": 1,
+        "Value": 11,
+        "Score": 20,
+        "DisplayValue": "Blue Skip"
+      },
+      {
+        "Color": 1,
+        "Value": 4,
+        "Score": 4,
+        "DisplayValue": "Blue Four"
+      },
+      {
+        "Color": 1,
+        "Value": 10,
+        "Score": 20,
+        "DisplayValue": "Blue Reverse"
+      },
+      {
+        "Color": 3,
+        "Value": 1,
+        "Score": 1,
+        "DisplayValue": "Green One"
+      },
+      {
+        "Color": 1,
+        "Value": 10,
+        "Score": 20,
+        "DisplayValue": "Blue Reverse"
+      },
+      {
+        "Color": 3,
+        "Value": 6,
+        "Score": 6,
+        "DisplayValue": "Green Six"
       }
     ]
-  }
+  },
+  "Id": "00000000-0000-0000-0000-000000000000",
+  "UpdatedAt": "0001-01-01T00:00:00"
 }

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnoGame.GameObject;
 
 namespace UnoGame.GameLogic
@@ -10,7 +8,6 @@ namespace UnoGame.GameLogic
         private Card topDiscard;
         private Enums.CardColor currentColor;
         private Enums.CardValue currentValue;
-
         public CardDeckLogic(CardDeck cardDeck)
         {
             deck = cardDeck;
@@ -56,13 +53,13 @@ namespace UnoGame.GameLogic
             return dealtCards;
         }
 
-        public Card DrawCard()
+        public Card DrawCard(Player currentPlayer)
         {
             if (deck.GetDeck().Count > 0)
             {
                 Card drawnCard = deck.GetDeck()[0]; // Get the top card from the deck
                 deck.GetDeck().RemoveAt(0); // Remove the drawn card from the deck
-
+                
                 Console.WriteLine("Drew a card: " + drawnCard);
 
                 // Check if the drawn card is playable
@@ -83,36 +80,57 @@ namespace UnoGame.GameLogic
                         Console.WriteLine("No more cards in the deck.");
                         return null; // Exit the method if the deck is empty
                     }
-                    return drawnCard;
                 }
+
+                // If the current player is AI, automatically play the drawn card
+                if (currentPlayer.Type == PlayerType.AI)
+                {
+                    Console.WriteLine("AI player is automatically playing the drawn card: " + drawnCard);
+                    currentPlayer.PlayCard(drawnCard); // Assuming there's a PlayCard method in the Player class
+                }
+        
                 return drawnCard;
             }
 
             Console.WriteLine("No more cards in the deck.");
-            return null; // Handle the case where the deck is empty
+            return null; // Exit the method if the deck is empty
         }
         public void DrawFour(Player nextPlayer)
         {
             for (int i = 0; i < 4; i++)
             {
-                Card drawnCard = DrawCard();
-
-                if (drawnCard != null)
+                if (deck.GetDeck().Count > 0)
                 {
-                    nextPlayer.DrawCard(drawnCard);
+                    Card drawnCard = deck.GetDeck()[0]; 
+                    deck.GetDeck().RemoveAt(0); 
+                    nextPlayer.Hand.AddCardToHand(drawnCard);
                 }
                 else
                 {
-                    Console.Write("Choose a color for the Wild card (Red, Blue, Yellow, Green): ");
-                    string chosenColor = Console.ReadLine();
-
-                    Console.WriteLine($"Chosen color: {chosenColor}");
-                    
-                    UpdateCurrentColorAndValue(new Card { Color = Enums.ParseEnum<Enums.CardColor>(chosenColor), Value = Enums.CardValue.Wild });
-
+                    Console.WriteLine("Deck is empty!");
+                    break; 
                 }
             }
+            if (nextPlayer.Type == PlayerType.Human)
+            {
+                Console.Write("Choose a color for the Wild card (Red, Blue, Yellow, Green): ");
+                string chosenColor = Console.ReadLine();
+
+                Console.WriteLine($"Chosen color: {chosenColor}");
+
+                // Update the current color and value
+                UpdateCurrentColorAndValue(new Card { Color = Enums.ParseEnum<Enums.CardColor>(chosenColor), Value = Enums.CardValue.Wild });
+            }
+            else if (nextPlayer.Type == PlayerType.AI)
+            {
+                // Implement AI logic for choosing color (replace this with your actual logic)
+                Enums.CardColor aiChosenColor = ((AiPlayer)nextPlayer).ChooseColorForWildCard();
+
+                // Update the current color and value
+                UpdateCurrentColorAndValue(new Card { Color = aiChosenColor, Value = Enums.CardValue.Wild });
+            }
         }
+
         public void ShuffleDeck()
         {
             Random random = new Random();
@@ -135,18 +153,20 @@ namespace UnoGame.GameLogic
             if (deckCards.Count > 0)
             {
                 topDiscard = deckCards[0]; // Set topDiscard as the first card
-                
-                topDiscard = deckCards.FirstOrDefault(card =>
-                    card.Value != Enums.CardValue.Wild && card.Value != Enums.CardValue.WildDrawFour);
-                
+
+                // Check if the first card is a Wild or WildDrawFour card
                 if (topDiscard.Value == Enums.CardValue.Wild || topDiscard.Value == Enums.CardValue.WildDrawFour)
                 {
                     ShuffleDeck();
                     topDiscard = deckCards[0];
                 }
-                
+
+                // Remove the chosen card from the deck
                 deckCards.RemoveAt(0);
-                UpdateCurrentColorAndValue(topDiscard); // Update the current color and value
+
+                // Update the current color and value based on the chosen card
+                UpdateCurrentColorAndValue(topDiscard);
+
                 Console.WriteLine("The first card has been chosen and is " + topDiscard.ToString());
                 return topDiscard;
             }
@@ -155,9 +175,15 @@ namespace UnoGame.GameLogic
             return null;
         }
 
+
         public Card GetTopDiscardCard()
         {
             return topDiscard;
+
+        }
+        public void SetTopDiscardCard(Card card)
+        {
+            topDiscard = card;
         }
 
         public bool IsPlayableCard(Card card)

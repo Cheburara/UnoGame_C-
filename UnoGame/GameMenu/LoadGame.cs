@@ -127,26 +127,9 @@ namespace UnoGame.GameMenu
             }
 
             CoreLogic coreLogic = new CoreLogic(cardDeckLogic, gameRules, gameState.Players, endMenu, gameName);
-
-            // Display the current game state or perform any other necessary setup
-            DisplayCurrentGameState(gameState);
-
+            
             // Implement logic to continue the game using the loaded game state
-            coreLogic.StartGame(gameState.Players, initialCardCount, totalCardsInDeck);
-        }
-        
-        private static void DisplayCurrentGameState(GameState gameState)
-        {
-            Console.WriteLine($"Current Game State for {gameState.GameName}:");
-    
-            foreach (var player in gameState.Players)
-            {
-                Console.WriteLine($"{player.Name}'s hand: {string.Join(", ", player.Hand)}");
-            }
-
-            Console.WriteLine($"Top card on the deck: {gameState.Deck.Last()}");
-    
-            // Add more information based on your game structure
+            coreLogic.ContinueGame();
         }
 
         private static int GetUserChoice(int min, int max)

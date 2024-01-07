@@ -1,10 +1,9 @@
-using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace UnoGame.GameObject
 {
     public class Enums
     {
-        
         public static T ParseEnum<T>(string value)
         {
             return (T)Enum.Parse(typeof(T), value, true);
@@ -61,6 +60,8 @@ namespace UnoGame.GameObject
 
     public class Card
     {
+        [Key]
+        public int CardId { get; set; }
         public Enums.CardColor Color { get; set; }
         public Enums.CardValue Value { get; set; }
         public Enums.CardScore Score { get; set; }
@@ -88,7 +89,8 @@ namespace UnoGame.GameObject
         
         public bool CanBePlayedOn(Card otherCard)
         {
-            return this.Color == Enums.CardColor.Black // WildDrawFour is always playable
+            return this.Color == Enums.CardColor.Black // Wild and WildDrawFour are always playable
+                   || (this.Value == Enums.CardValue.Wild && this.Color == otherCard.Color) 
                    || (this.Value == Enums.CardValue.WildDrawFour && this.Color == otherCard.Color) // WildDrawFour with matching color
                    || this.Value == otherCard.Value // Same value
                    || this.Color == otherCard.Color; // Same color

@@ -9,6 +9,7 @@ namespace UnoGame.GameLogic
         private Player[] _players;
         private WinningLogic _winningLogic;
         private int _currentPlayerIndex;
+        private bool isGameStateLoaded = false;
         // private Card selectedCard;
         private TurnDirection.Enums.TurnDirection currentDirection;
         // private List<Card> playedCards = new List<Card>();
@@ -23,6 +24,7 @@ namespace UnoGame.GameLogic
             _currentPlayerIndex = 0;
             
         }
+        
 
         public void PlayNextTurn()
 {
@@ -66,7 +68,7 @@ namespace UnoGame.GameLogic
                 }
                 // Player chose to draw a card
                 
-                Card drawnCard = _cardDeckLogic.DrawCard();
+                Card drawnCard = _cardDeckLogic.DrawCard(currentPlayer);
                 currentPlayer.Hand.AddCardToHand(drawnCard);
                 
                 Console.WriteLine($"{currentPlayer.Name} drew a card: {drawnCard}");
@@ -82,8 +84,6 @@ namespace UnoGame.GameLogic
                     // Valid card to play
                     Console.WriteLine($"{currentPlayer.Name} played: {selectedCard}");
                     currentPlayer.PlayCard(selectedCard);
-
-                    // Update the current color and value
 
                     HandleWildCardEffects(selectedCard, currentPlayer);
 
@@ -143,32 +143,39 @@ namespace UnoGame.GameLogic
             {
                 if (currentPlayer.Type == PlayerType.Human)
                 {
-                    // Ask the human player to choose a new color
-                    Console.Write("Choose a new color (Red, Blue, Yellow, Green): ");
-                    string chosenColor = Console.ReadLine();
-    
-                    Console.WriteLine($"Chosen color: {chosenColor}");
-    
-                    Card selectedCard = new Card { Color = playedCard.Color, Value = playedCard.Value };
+                    // Ask the human player to choose a new color and update
+                    Card selectedCard = ChooseColorAndUpdate("Choose a new color (Red, Blue, Yellow, Green): ", currentPlayer);
+                    _cardDeckLogic.UpdateCurrentColorAndValue(selectedCard);
 
-                    // Update the current color to the chosen color
-                    _cardDeckLogic.UpdateCurrentColorAndValue(new Card { Color = Enums.ParseEnum<Enums.CardColor>(chosenColor), Value = selectedCard.Value });
+                    if (playedCard.Value == Enums.CardValue.WildDrawFour)
+                    {
+                        // Draw four cards for the human player
+                        _cardDeckLogic.DrawFour(currentPlayer);
+                    }
                 }
                 else if (currentPlayer.Type == PlayerType.AI)
                 {
                     // AI player chooses the color using existing logic
                     playedCard.Color = (currentPlayer as AiPlayer)?.ChooseColorForWildCard() ?? Enums.CardColor.Red;
-                }
 
-                if (playedCard.Value == Enums.CardValue.WildDrawFour)
-                {
-                    // Draw four cards for the next player
-                    Player nextPlayer = _players[(_currentPlayerIndex + 1) % _players.Length];
-                    _cardDeckLogic.DrawFour(nextPlayer);
+                    if (playedCard.Value == Enums.CardValue.WildDrawFour)
+                    {
+                        // Draw four cards for the next player
+                        Player nextPlayer = _players[(_currentPlayerIndex + 1) % _players.Length];
+                        _cardDeckLogic.DrawFour(nextPlayer);
+                    }
                 }
             }
         }
+        private Card ChooseColorAndUpdate(string prompt, Player currentPlayer)
+        {
+            Console.Write(prompt);
+            string chosenColor = Console.ReadLine();
 
+            Console.WriteLine($"Chosen color: {chosenColor}");
+
+            return new Card { Color = Enums.ParseEnum<Enums.CardColor>(chosenColor), Value = Enums.CardValue.Wild };
+        }
 
         private void HandleSpecialCards(Card playedCard)
         {
@@ -207,11 +214,25 @@ namespace UnoGame.GameLogic
             Console.WriteLine($"{skippedPlayer.Name} is skipped. Next player: {_players[_currentPlayerIndex].Name}");
 
         }
-
-        private void DisplayTopCard()
+        private void DisplayTopCard(bool useSetTopOnLoad = false)
         {
-            Card topCard = _cardDeckLogic.GetTopDiscardCard();
-            Console.WriteLine($"Top Card: {topCard}");
+            if (useSetTopOnLoad && isGameStateLoaded)
+            {
+                Card topCard = _cardDeckLogic.GetTopDiscardCard();
+                Console.WriteLine($"Top Card (using SetTopDiscardCard on load): {topCard}");
+            }
+            else
+            {
+                Card topCard = _cardDeckLogic.GetTopDiscardCard();
+                if (topCard != null)
+                {
+                    Console.WriteLine($"Top Card: {topCard}");
+                }
+                else
+                {
+                    Console.WriteLine($"Top Card is null.");
+                }
+            }
         }
 
         private void DisplayPlayerHand(Player player)

@@ -3,6 +3,7 @@ using UnoGame.GameObject;
 using UnoGame.GameLogic;
 using UnoGame.Rules;
 using UnoGame.Storage;
+using UnoGame.DAL;
 
 namespace UnoGame.GameMenu
 {
@@ -141,7 +142,9 @@ namespace UnoGame.GameMenu
             }
             else if (storageType == StorageType.Database)
             {
-                gameStateStorage.SaveToDatabase(gameState);
+                var dbContextFactory = new AppDbContextFactory();
+                using var dbContext = dbContextFactory.CreateDbContext(null);
+                gameStateStorage.SaveToDatabase(gameState, dbContext);
             }
             else
             {
